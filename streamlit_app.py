@@ -175,7 +175,8 @@ def sidebar_menu():
         st.title("🏋️ Knee Rehab Assistant")
         st.success("Logged in successfully")
         st.markdown("---")
-        menu = st.radio("📍 Navigation", ["Home", "Features", "AI Coach", "FAQ"], index=["Home", "Features", "AI Coach", "FAQ"].index(st.session_state.page))
+        menu = st.radio("📍 Navigation", ["Home", "Features", "AI Coach", "FAQ"],
+                        index=["Home", "Features", "AI Coach", "FAQ"].index(st.session_state.page))
         st.session_state.page = menu
         st.markdown("---")
         st.caption("Session started: " + st.session_state.session_start.strftime("%I:%M %p"))
@@ -207,7 +208,7 @@ def page_coach():
 
     rag = st.session_state.rag
 
-    # Floating Restart Chat Button
+    # Floating Restart Chat Button (white → black hover)
     st.markdown("""
         <button class="restart-btn" onclick="window.location.reload()">🔄 Restart Chat</button>
     """, unsafe_allow_html=True)
@@ -243,13 +244,12 @@ def page_coach():
                 context = rag.retrieve_context(user_message, profile)
                 ai_response = rag.generate_response(user_message, profile, context, st.session_state.messages)
 
-        # Typing animation
         bubble_placeholder = st.empty()
         ai_text = ""
         for char in ai_response:
             ai_text += char
             bubble_placeholder.markdown(f"<div class='chat-bubble ai-bubble'>{ai_text}</div>", unsafe_allow_html=True)
-            time.sleep(0.02)  # 50–60 chars/sec
+            time.sleep(0.02)  # ~55 chars/sec
         st.session_state.messages.append({"role": "assistant", "content": ai_response})
         st.rerun()
 
