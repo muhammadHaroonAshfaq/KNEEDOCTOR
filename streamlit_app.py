@@ -1,5 +1,5 @@
 # streamlit_app.py
-"""KneeDoc AI — ChatGPT-style interface with visible sidebar, wide layout, live streaming, typing animation, and timestamps."""
+"""Arthritis GPT Clone with Fixed Design, Alignment, and Runtime Error Handling."""
 
 import streamlit as st
 from datetime import datetime
@@ -10,7 +10,7 @@ from rag_model import KneeArthritisRAG
 
 
 # --------------------------------------------------------
-# PAGE CONFIG - CRITICAL FIX: Changed to "wide" for sidebar visibility
+# PAGE CONFIG
 # --------------------------------------------------------
 st.set_page_config(
     page_title="KneeDoc AI",
@@ -20,24 +20,23 @@ st.set_page_config(
 
 
 # --------------------------------------------------------
-# MODERN CHATGPT-LIKE CSS (Optimized for Wide Layout and Visibility)
+# ARTHRITIS GPT CLONE CSS (Perfected Alignment)
 # --------------------------------------------------------
 st.markdown("""
 <style>
 /* Base Streamlit Overrides */
 #MainMenu, footer {visibility: hidden;}
-
-/* CRITICAL FIX: Main content area pushes down to clear the fixed top nav */
-/* Targeting the main container that holds the chat content */
-.block-container {
-    padding-top: 60px; 
-    max-width: 100%; /* Use full width for the application background */
-}
-
-/* Background Color */
 .stApp {background-color: #f0f2f6;} 
 
-/* Fixed Top Navigation Bar */
+/* Main Content Wrapper - Fixes top spacing and ensures full width */
+.block-container {
+    padding-top: 60px !important; 
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    max-width: 100%;
+}
+
+/* Fixed Top Navigation Bar - Clean, full width */
 .top-nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -51,22 +50,21 @@ st.markdown("""
 .logo {font-size: 1.6rem; font-weight: 700; color: white;}
 
 
-/* Main Chat Container - Now Centered within the wide layout */
+/* Main Chat Container - Centered and sized for readability */
 .chat-container {
-    max-width: 800px; /* Max width for a readable chat interface */
-    margin: 30px auto 100px auto; /* Centering it horizontally */
+    max-width: 800px; 
+    margin: 30px auto 100px auto; /* Increased bottom margin for fixed chat input */
     padding: 1.5rem 1rem;
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 
-/* Chat Input Bar - Adjusted to center beneath the chat container */
+/* Chat Input Bar - CRITICAL FIX: Ensure correct width under the centered container */
 .stChatInput {
     position: fixed;
     bottom: 0;
-    /* Use fixed width for centering - adjust as needed based on st.layout*/
-    width: 800px; 
+    width: 800px; /* Matches max-width of chat-container for clean alignment */
     left: 50%;
     transform: translateX(-50%);
     background: #f0f2f6; 
@@ -76,85 +74,77 @@ st.markdown("""
 }
 
 
-/* Message Structure (Same as previous fix) */
-.message-full-wrapper {
-    margin: 1.5rem 0; 
+/* Message Structure - FINAL ALIGNMENT FIX */
+.message-container {
+    display: flex;
+    flex-direction: column; /* Stacks the bubble and timestamp */
+    margin: 1.5rem 0;
 }
-.message-wrapper {
-    display: flex; 
-    align-items: flex-end; 
-    gap: 10px; 
+.message-bubble-row {
+    display: flex;
+    align-items: flex-start; /* Align bubble and avatar tops */
+    gap: 10px;
 }
-.message-user {
+
+/* User Message Specific Alignment */
+.message-user-container {
+    align-items: flex-end; /* Pushes everything to the right */
+}
+.message-user-bubble-row {
     justify-content: flex-end;
 }
-.message-assistant {
-    justify-content: flex-start;
+.message-user-timestamp {
+    text-align: right;
+    padding-right: 46px; /* Aligns with the end of the bubble */
 }
+
+/* Assistant Message Specific Alignment */
+.message-assistant-container {
+    align-items: flex-start; /* Pushes everything to the left */
+}
+.message-assistant-timestamp {
+    text-align: left;
+    margin-left: 46px; /* Aligns with the start of the bubble */
+}
+
+
 .avatar {
     width: 36px; height: 36px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; flex-shrink: 0;
-    color: white;
+    font-size: 1rem; flex-shrink: 0; color: white;
 }
-.avatar-user {
-    background: linear-gradient(135deg, #5c6bc0, #7986cb);
-}
-.avatar-assistant {
-    background: linear-gradient(135deg, #4CAF50, #81c784);
-}
+.avatar-user {background: linear-gradient(135deg, #5c6bc0, #7986cb);}
+.avatar-assistant {background: linear-gradient(135deg, #4CAF50, #81c784);}
+
 .message-content {
     max-width: 75%; 
     padding: 1rem 1.3rem; 
     border-radius: 20px; 
     font-size: 1rem; line-height: 1.5;
     word-break: break-word; 
+    white-space: pre-wrap; /* Keeps newlines/formatting */
 }
-.message-user .message-content {
+.message-user-bubble-row .message-content {
     background: linear-gradient(135deg, #5c6bc0, #7986cb);
     color: white;
     border-top-right-radius: 4px;
 }
-.message-assistant .message-content {
+.message-assistant-bubble-row .message-content {
     background: #eef1f6; 
     color: #333;
     border-top-left-radius: 4px;
 }
 
-/* Timestamp */
 .timestamp {
     font-size: 0.7rem;
     color: #999;
     margin-top: 5px;
 }
-.user-timestamp {
-    text-align: right;
-    /* Push timestamp to align with the end of the user message bubble */
-    padding-right: 46px; 
-}
-.assistant-timestamp {
-    text-align: left;
-    margin-left: 46px; 
-}
-
-/* Typing Indicator */
-.typing-indicator {
-    display: flex; gap: 6px; align-items: center; 
-    margin-left: 46px; 
-    margin-top: 10px;
-}
-.typing-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: #aaa;
-    animation: blink 1.2s infinite;
-}
-.typing-dot:nth-child(2) {animation-delay: 0.2s;}
-.typing-dot:nth-child(3) {animation-delay: 0.4s;}
-@keyframes blink {0%, 80%, 100% {opacity: 0;} 40% {opacity: 1;}}
 
 /* Sidebar Styling - Ensure it clears the top nav */
 .stSidebar {
     padding-top: 60px; 
-    background-color: white !important; /* Ensure white background for settings */
+    background-color: white !important; 
     box-shadow: 2px 0 8px rgba(0,0,0,0.05);
 }
 .stButton>button {
@@ -167,6 +157,23 @@ st.markdown("""
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(92, 107, 192, 0.3);
 }
+
+/* Error box styling to make it look less intrusive */
+.stAlert {
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    z-index: 1000;
+}
+
+/* Typing Indicator (Same as previous fix) */
+.typing-indicator {display: flex; gap: 6px; align-items: center; margin-left: 46px; margin-top: 10px;}
+.typing-dot {width: 8px; height: 8px; border-radius: 50%; background: #aaa; animation: blink 1.2s infinite;}
+.typing-dot:nth-child(2) {animation-delay: 0.2s;}
+.typing-dot:nth-child(3) {animation-delay: 0.4s;}
+@keyframes blink {0%, 80%, 100% {opacity: 0;} 40% {opacity: 1;}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -188,7 +195,7 @@ for k, v in defaults.items():
 
 
 # --------------------------------------------------------
-# DATA LOADING & CACHING (No Change)
+# DATA LOADING & CACHING (Integration Unchanged)
 # --------------------------------------------------------
 @st.cache_resource
 def load_data():
@@ -215,20 +222,21 @@ st.markdown("""
 
 
 # --------------------------------------------------------
-# SIDEBAR (Using native Streamlit sidebar - now visible in wide mode)
+# SIDEBAR
 # --------------------------------------------------------
 with st.sidebar:
     st.markdown("### ⚙️ Settings")
 
-    api_key = st.text_input("🔑 OpenAI API Key", type="password", placeholder="sk-...")
+    api_key = st.text_input("🔑 OpenAI API Key", type="password", placeholder="sk-...", key="api_key_input")
     
-    if api_key:
+    if st.session_state.get('api_key_input'):
         st.success("✅ API Key configured")
         if not st.session_state.rag_initialized:
             with st.spinner("Loading exercise database..."):
                 try:
                     loader = load_data()
-                    st.session_state.rag = initialize_rag(loader, api_key)
+                    # The rag model is initialized only once, keeping your integration secure
+                    st.session_state.rag = initialize_rag(loader, st.session_state.api_key_input)
                     st.session_state.rag_initialized = True
                     st.success(f"✅ {len(loader.exercises)} exercises loaded")
                 except Exception as e:
@@ -238,10 +246,10 @@ with st.sidebar:
 
     st.divider()
 
+    st.markdown("### 🧑‍⚕️ Patient Profile")
     if st.session_state.patient_profile:
         prof = st.session_state.patient_profile
         st.markdown(f"""
-        **👤 Patient Profile**
         - **Name:** {st.session_state.user_name or 'User'}
         - **Age:** {prof.get('age', 'N/A')}
         - **Severity:** {prof.get('severity', 'N/A')}/4
@@ -249,8 +257,9 @@ with st.sidebar:
         """)
 
     if st.button("🔄 New Session", use_container_width=True):
+        # Clear all session data except the initialized RAG model
         for k in list(st.session_state.keys()):
-            if k not in ["rag", "rag_initialized", "api_key"]:
+            if k not in ["rag", "rag_initialized", "api_key_input"]:
                 del st.session_state[k]
         st.rerun()
 
@@ -260,7 +269,7 @@ with st.sidebar:
 # --------------------------------------------------------
 st.markdown('<div class="chat-container">', unsafe_allow_html=True)
 
-if not api_key or not st.session_state.rag_initialized:
+if not st.session_state.get('api_key_input') or not st.session_state.rag_initialized:
     # Initial landing page without API key
     st.markdown("""
     <div style="text-align:center; padding:4rem 2rem;">
@@ -290,111 +299,119 @@ else:
 
     # Display all messages
     for msg in st.session_state.messages:
-        role_class = "message-user" if msg["role"] == "user" else "message-assistant"
-        avatar = "👤" if msg["role"] == "user" else "🤖"
+        role = msg["role"]
+        avatar = "👤" if role == "user" else "🤖"
         
-        # HTML structure for user message
-        if msg["role"] == "user":
+        # FINAL FIX: Use a single HTML block with correct class names for styling
+        if role == "user":
             message_html = f"""
-            <div class="message-full-wrapper">
-                <div class="message-wrapper {role_class}">
+            <div class="message-container message-user-container">
+                <div class="message-bubble-row message-user-bubble-row">
                     <div class="message-content">{msg['content']}</div>
-                    <div class="avatar avatar-{msg["role"]}">{avatar}</div>
+                    <div class="avatar avatar-{role}">{avatar}</div>
                 </div>
-                <div class="timestamp user-timestamp">{msg['time']}</div>
+                <div class="timestamp message-user-timestamp">{msg['time']}</div>
             </div>
             """
-        # HTML structure for assistant message
         else:
              message_html = f"""
-            <div class="message-full-wrapper">
-                <div class="message-wrapper {role_class}">
-                    <div class="avatar avatar-{msg["role"]}">{avatar}</div>
+            <div class="message-container message-assistant-container">
+                <div class="message-bubble-row">
+                    <div class="avatar avatar-{role}">{avatar}</div>
                     <div class="message-content">{msg['content']}</div>
                 </div>
-                <div class="timestamp assistant-timestamp">{msg['time']}</div>
+                <div class="timestamp message-assistant-timestamp">{msg['time']}</div>
             </div>
             """
-
         st.markdown(message_html, unsafe_allow_html=True)
 
     # Chat Input
-    user_input = st.chat_input("Type your message here...")
+    user_input = st.chat_input("Type your message here...", key="chat_input")
 
+    # CRITICAL ERROR FIX: Only process if user_input is a non-empty string
     if user_input:
-        # Add user message
+        # 1. Add user message
         st.session_state.messages.append({
             "role": "user",
             "content": user_input,
             "time": datetime.now().strftime("%I:%M %p")
         })
+        # Clear the input box to prevent repeated submissions on re-run
+        st.session_state.chat_input = "" 
         st.rerun() 
 
-    # If the last message was from the user, generate a response
-    if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
+# RAG Processing occurs AFTER the rerun triggered by user input, 
+# ensuring the user message is displayed and st.session_state.messages[-1] is the user's message.
+if st.session_state.rag_initialized and st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
+    
+    # Use the content from the last message in state
+    current_user_input = st.session_state.messages[-1]["content"]
+
+    # Display typing indicator while processing
+    typing_placeholder = st.empty()
+    with typing_placeholder.container():
+        st.markdown("""
+        <div class="typing-indicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+        """, unsafe_allow_html=True)
+    time.sleep(1.0) 
+
+    # Response Generation Logic (Integration Unchanged)
+    try:
+        rag = st.session_state.rag
         
-        # Display typing indicator while processing
-        typing_placeholder = st.empty()
-        with typing_placeholder.container():
-            st.markdown("""
-            <div class="typing-indicator">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            </div>
-            """, unsafe_allow_html=True)
-        time.sleep(1.0) 
+        if not st.session_state.patient_profile:
+            # Passes current_user_input (guaranteed non-empty string)
+            profile = rag.extract_patient_info(current_user_input)
+            st.session_state.patient_profile = profile
+            st.session_state.user_name = next(
+                (w.strip(",.") for w in current_user_input.split() if w[0].isupper()), "User"
+            )
+            ctx = rag.retrieve_context(current_user_input, profile)
+            full_reply = rag.generate_response(current_user_input, profile, ctx, st.session_state.messages)
+        else:
+            ctx = rag.retrieve_context(current_user_input, st.session_state.patient_profile)
+            full_reply = rag.generate_response(current_user_input, st.session_state.patient_profile, ctx, st.session_state.messages)
 
-        # Response Generation Logic (Integration Unchanged)
-        try:
-            rag = st.session_state.rag
+        typing_placeholder.empty()
+        
+        # Live Streaming Display
+        reply_container = st.empty()
+        displayed_content = ""
+        current_time_str = datetime.now().strftime("%I:%M %p")
+        
+        # The streaming loop
+        for token in full_reply.split():
+            displayed_content += token + " "
             
-            if not st.session_state.patient_profile:
-                profile = rag.extract_patient_info(user_input)
-                st.session_state.patient_profile = profile
-                st.session_state.user_name = next(
-                    (w.strip(",.") for w in user_input.split() if w[0].isupper()), "User"
-                )
-                ctx = rag.retrieve_context(user_input, profile)
-                full_reply = rag.generate_response(user_input, profile, ctx, st.session_state.messages)
-            else:
-                ctx = rag.retrieve_context(user_input, st.session_state.patient_profile)
-                full_reply = rag.generate_response(user_input, st.session_state.patient_profile, ctx, st.session_state.messages)
-
-            typing_placeholder.empty()
-            
-            # Live Streaming Display
-            reply_container = st.empty()
-            displayed_content = ""
-            current_time_str = datetime.now().strftime("%I:%M %p")
-            
-            # The streaming loop
-            for token in full_reply.split():
-                displayed_content += token + " "
-                
-                # HTML for streaming response display
-                streaming_html = f"""
-                <div class="message-full-wrapper">
-                    <div class="message-wrapper message-assistant">
-                        <div class="avatar avatar-assistant">🤖</div>
-                        <div class="message-content">{displayed_content.strip()}</div>
-                    </div>
-                    <div class="timestamp assistant-timestamp">{current_time_str}</div>
+            # HTML for streaming response display (Uses final assistant structure)
+            streaming_html = f"""
+            <div class="message-container message-assistant-container">
+                <div class="message-bubble-row">
+                    <div class="avatar avatar-assistant">🤖</div>
+                    <div class="message-content">{displayed_content.strip()}</div>
                 </div>
-                """
-                reply_container.markdown(streaming_html, unsafe_allow_html=True)
-                time.sleep(0.03)
+                <div class="timestamp message-assistant-timestamp">{current_time_str}</div>
+            </div>
+            """
+            reply_container.markdown(streaming_html, unsafe_allow_html=True)
+            time.sleep(0.03)
 
-            # Save the final message to state
-            st.session_state.messages.append({
-                "role": "assistant",
-                "content": full_reply,
-                "time": current_time_str
-            })
-            st.rerun() 
+        # Save the final message to state
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": full_reply,
+            "time": current_time_str
+        })
+        # Final rerun to correctly place the final message in the history
+        st.rerun() 
 
-        except Exception as e:
-            typing_placeholder.empty()
-            st.error(f"⚠️ An error occurred during response generation. Check your API key and model logic: {e}")
+    except Exception as e:
+        typing_placeholder.empty()
+        # Display the error using st.error which often shows outside the main container
+        st.error(f"⚠️ An error occurred during response generation. Check your API key and model logic: {e}")
             
 st.markdown("</div>", unsafe_allow_html=True)
