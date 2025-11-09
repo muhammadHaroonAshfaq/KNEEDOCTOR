@@ -6,24 +6,126 @@ from rag_model import KneeArthritisRAG
 
 st.set_page_config(page_title="Knee Rehab Assistant", page_icon="🏋️", layout="wide")
 
-# === STYLES ===
+# === GLOBAL STYLES ===
 st.markdown("""
 <style>
-.stApp {background: linear-gradient(160deg, #000000 0%, #001a33 100%) !important; color: #ffffff !important;}
-[data-testid="stAppViewContainer"], [data-testid="stHeader"], [data-testid="stSidebar"] {background: transparent !important; color: #ffffff !important;}
-h1, h2, h3, h4, h5, h6, label, p, span, div {color: #ffffff !important;}
-section[data-testid="stSidebar"] {background: rgba(0, 0, 20, 0.85) !important; color: white !important; border-right: 1px solid rgba(0,153,255,0.2);}
-.card {background: rgba(0,51,102,0.4); border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem; border: 1px solid rgba(0,153,255,0.3); box-shadow: 0 0 8px rgba(0,153,255,0.2);}
-.login-container {display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;}
-.login-card {background: rgba(0,51,102,0.5); padding: 3rem 3.5rem; border-radius: 16px; box-shadow: 0 4px 25px rgba(0,153,255,0.4); text-align: center; max-width: 420px; width: 90%; animation: fadeIn 0.7s ease-in-out;}
-.login-card h2 {background: linear-gradient(135deg, #0099ff, #33ccff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem; font-weight: 700;}
-.gradient-btn {background: linear-gradient(135deg, #0077ff, #33ccff); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; width: 100%;}
-.gradient-btn:hover {box-shadow: 0 0 20px rgba(0,153,255,0.8); transform: translateY(-2px);}
-.chat-bubble {padding: 1rem; border-radius: 12px; margin-bottom: 0.5rem; max-width: 80%; word-wrap: break-word;}
-.user-bubble {background: linear-gradient(135deg, #0055aa, #0099ff); align-self: flex-end; color: white; margin-left: auto;}
-.ai-bubble {background: linear-gradient(135deg, #1a2233, #223a5f); color: #e5e7eb; align-self: flex-start;}
-.typing {font-style: italic; color: #8ab4f8; padding: 0.5rem;}
-@keyframes fadeIn {from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);}}
+.stApp {
+  background: linear-gradient(160deg, #000000 0%, #001a33 100%) !important;
+  color: #ffffff !important;
+}
+[data-testid="stAppViewContainer"], [data-testid="stHeader"], [data-testid="stSidebar"] {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+h1, h2, h3, h4, h5, h6, label, p, span, div {
+  color: #ffffff !important;
+}
+section[data-testid="stSidebar"] {
+  background: rgba(0, 0, 20, 0.85) !important;
+  color: white !important;
+  border-right: 1px solid rgba(0,153,255,0.2);
+}
+.card {
+  background: rgba(0,51,102,0.4);
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0,153,255,0.3);
+  box-shadow: 0 0 8px rgba(0,153,255,0.2);
+}
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+.login-card {
+  background: rgba(0,51,102,0.5);
+  padding: 3rem 3.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 25px rgba(0,153,255,0.4);
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+  animation: fadeIn 0.7s ease-in-out;
+}
+.login-card h2 {
+  background: linear-gradient(135deg, #0099ff, #33ccff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.gradient-btn {
+  background: linear-gradient(135deg, #0077ff, #33ccff);
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+.gradient-btn:hover {
+  box-shadow: 0 0 20px rgba(0,153,255,0.8);
+  transform: translateY(-2px);
+}
+
+/* Chat bubbles */
+.chat-bubble {
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+.user-bubble {
+  background: linear-gradient(135deg, #0055aa, #0099ff);
+  align-self: flex-end;
+  color: white;
+  margin-left: auto;
+}
+.ai-bubble {
+  background: linear-gradient(135deg, #1a2233, #223a5f);
+  color: #e5e7eb;
+  align-self: flex-start;
+}
+.typing {
+  font-style: italic;
+  color: #8ab4f8;
+  padding: 0.5rem;
+}
+
+/* Floating Restart Chat Button */
+.restart-btn {
+  position: fixed;
+  top: 20px;
+  right: 25px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 18px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+.restart-btn:hover {
+  background-color: black;
+  color: white;
+  box-shadow: 0 0 15px rgba(255,255,255,0.7);
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -105,12 +207,10 @@ def page_coach():
 
     rag = st.session_state.rag
 
-    # Restart Chat Button
-    if st.button("🔄 Restart Chat"):
-        st.session_state.messages = [
-            {"role": "assistant", "content": "👋 Hi! I'm your Knee Rehab Assistant. What's your name?"}
-        ]
-        st.rerun()
+    # Floating Restart Chat Button
+    st.markdown("""
+        <button class="restart-btn" onclick="window.location.reload()">🔄 Restart Chat</button>
+    """, unsafe_allow_html=True)
 
     # Initialize messages
     if "messages" not in st.session_state or not st.session_state.messages:
@@ -149,7 +249,7 @@ def page_coach():
         for char in ai_response:
             ai_text += char
             bubble_placeholder.markdown(f"<div class='chat-bubble ai-bubble'>{ai_text}</div>", unsafe_allow_html=True)
-            time.sleep(0.02)  # ~50–60 chars/sec
+            time.sleep(0.02)  # 50–60 chars/sec
         st.session_state.messages.append({"role": "assistant", "content": ai_response})
         st.rerun()
 
