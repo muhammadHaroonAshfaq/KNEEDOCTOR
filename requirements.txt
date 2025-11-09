@@ -1,7 +1,12 @@
-streamlit==1.29.0
-openai==1.6.1
-sentence-transformers==2.2.2
-chromadb==0.4.22
-numpy==1.24.3
-pandas==2.0.3
-python-dotenv==1.0.0
+streamlit>=1.29.0
+openai>=1.6.0
+sentence-transformers>=2.2.0
+chromadb>=0.4.0
+numpy
+pandas
+python-dotenv
+```
+
+**File 2: `.python-version` (NEW FILE)**
+```
+3.11
