@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "dataset_name": "Knee Arthritis Exercise RAG Dataset",
+    "version": "1.0",
+    "created_date": "2025-11-08",
+    "purpose": "MVP RAG model for knee arthritis mobility and flexibility",
+    "disclaimer": "This is synthetic educational data. Not a substitute for professional medical advice. Always consult healthcare providers before starting exercise programs."
+  },
+  "dataset_statistics": {
+    "total_exercises": 20,
+    "total_progressions": 5,
+    "total_patient_profiles": 50,
+    "total_educational_content": 10,
+    "total_qa_pairs": 50
+  }
+}

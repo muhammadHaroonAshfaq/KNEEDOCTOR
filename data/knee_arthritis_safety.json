@@ -1,0 +1,48 @@
+{
+  "red_flags": [
+    {
+      "symptom": "Sudden severe pain with swelling",
+      "action": "Stop exercising immediately, apply ice, see doctor within 24 hours"
+    },
+    {
+      "symptom": "Knee gives out or feels unstable",
+      "action": "Stop weight-bearing exercises, use support, consult healthcare provider"
+    },
+    {
+      "symptom": "Fever with joint pain and swelling",
+      "action": "Seek immediate medical attention - possible infection"
+    },
+    {
+      "symptom": "Chest pain or severe shortness of breath",
+      "action": "Stop exercise, call emergency services if severe"
+    }
+  ],
+  "general_safety_rules": [
+    "Never exercise through sharp pain",
+    "Use 4/10 pain rule during exercise",
+    "Apply 2-hour pain rule after exercise",
+    "Progress gradually - one variable at a time",
+    "Always warm up before strengthening",
+    "Stay hydrated",
+    "Wear appropriate footwear",
+    "Exercise in safe environment",
+    "Have support nearby for balance exercises",
+    "Listen to your body"
+  ],
+  "contraindications": {
+    "absolute": [
+      "Acute knee infection",
+      "Recent fracture without clearance",
+      "Severe uncontrolled pain",
+      "Suspected DVT",
+      "Acute ligament tear"
+    ],
+    "relative": [
+      "Moderate to severe swelling",
+      "Pain at rest >7/10",
+      "Recent flare-up <48 hours",
+      "Significant balance impairment without support",
+      "Uncontrolled cardiovascular condition"
+    ]
+  }
+}

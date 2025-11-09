@@ -1,0 +1,81 @@
+[
+  {
+    "exercise_id": "EX001",
+    "name": "Quadriceps Setting",
+    "category": "strengthening",
+    "difficulty_level": 1,
+    "target_muscles": [
+      "quadriceps",
+      "vastus_medialis_oblique"
+    ],
+    "equipment_needed": "resistance_band",
+    "position": "lying_prone",
+    "severity_appropriate": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "pain_tolerance_required": "moderate",
+    "repetitions": "12-14",
+    "sets": "2-3",
+    "frequency": "1-2 times daily",
+    "instructions": [
+      "Detailed step 1",
+      "Detailed step 2",
+      "Continue through full movement"
+    ],
+    "contraindications": [
+      "acute_knee_swelling",
+      "severe_pain_during_exercise"
+    ],
+    "safety_cues": [
+      "Keep breathing normally",
+      "Stop if sharp pain occurs"
+    ],
+    "expected_sensations": "Muscle work without joint pain",
+    "modifications": {
+      "easier": "Reduce range of motion",
+      "harder": "Add resistance or hold longer"
+    }
+  },
+  {
+    "exercise_id": "EX002",
+    "name": "Straight Leg Raise",
+    "category": "strengthening",
+    "difficulty_level": 2,
+    "target_muscles": [
+      "quadriceps",
+      "hip_flexors"
+    ],
+    "equipment_needed": "mat",
+    "position": "lying_supine",
+    "severity_appropriate": [
+      1,
+      2,
+      3
+    ],
+    "pain_tolerance_required": "moderate",
+    "repetitions": "8-15",
+    "sets": "2-3",
+    "frequency": "1-3 times daily",
+    "instructions": [
+      "Detailed step 1",
+      "Detailed step 2",
+      "Continue through full movement"
+    ],
+    "contraindications": [
+      "acute_knee_swelling",
+      "severe_pain_during_exercise"
+    ],
+    "safety_cues": [
+      "Keep breathing normally",
+      "Stop if sharp pain occurs"
+    ],
+    "expected_sensations": "Muscle work without joint pain",
+    "modifications": {
+      "easier": "Reduce range of motion",
+      "harder": "Add resistance or hold longer"
+    }
+  }
+]

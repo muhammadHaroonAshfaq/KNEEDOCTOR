@@ -1,0 +1,38 @@
+{
+  "exercise_requests": [
+    "What exercises can help my knee?",
+    "I need knee exercises",
+    "Show me how to strengthen my knee",
+    "Exercises for knee arthritis",
+    "My knee hurts going downstairs",
+    "Help with knee stiffness",
+    "Knee exercises for seniors",
+    "Gentle knee exercises",
+    "I can't bend my knee well",
+    "Exercises to reduce knee pain"
+  ],
+  "pain_queries": [
+    "My knee hurts when I exercise",
+    "Is this pain normal?",
+    "Sharp pain in knee",
+    "Knee swelling after exercise",
+    "How much pain is okay?",
+    "Knee hurts more at night",
+    "Pain behind my knee",
+    "Knee pain going away then coming back"
+  ],
+  "progression_queries": [
+    "When can I do harder exercises?",
+    "Exercises are getting too easy",
+    "How do I progress?",
+    "Ready for next level",
+    "What comes after beginner exercises?"
+  ],
+  "adherence_queries": [
+    "I missed a week of exercises",
+    "Haven't exercised in a month",
+    "How to get back on track?",
+    "Struggling to stay consistent",
+    "No motivation to exercise"
+  ]
+}

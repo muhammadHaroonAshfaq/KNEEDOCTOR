@@ -1,0 +1,2128 @@
+{
+  "metadata": {
+    "dataset_name": "Knee Arthritis Exercise RAG Dataset",
+    "version": "1.0",
+    "created_date": "2025-11-08",
+    "purpose": "MVP RAG model for knee arthritis mobility and flexibility",
+    "total_components": 5,
+    "disclaimer": "This is synthetic educational data for MVP development. Not a substitute for professional medical advice. Always consult healthcare providers before starting exercise programs."
+  },
+  "exercises": [
+    {
+      "exercise_id": "EX001",
+      "name": "Quadriceps Setting",
+      "category": "strengthening",
+      "difficulty_level": 1,
+      "target_muscles": [
+        "quadriceps",
+        "vastus_medialis_oblique"
+      ],
+      "equipment_needed": "resistance_band",
+      "position": "lying_prone",
+      "severity_appropriate": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "pain_tolerance_required": "moderate",
+      "repetitions": "12-14",
+      "sets": "2-3",
+      "frequency": "1-2 times daily",
+      "instructions": [
+        "Detailed step 1",
+        "Detailed step 2",
+        "Continue through full movement"
+      ],
+      "contraindications": [
+        "acute_knee_swelling",
+        "severe_pain_during_exercise"
+      ],
+      "safety_cues": [
+        "Keep breathing normally",
+        "Stop if sharp pain occurs"
+      ],
+      "expected_sensations": "Muscle work without joint pain",
+      "modifications": {
+        "easier": "Reduce range of motion",
+        "harder": "Add resistance or hold longer"
+      }
+    },
+    {
+      "exercise_id": "EX002",
+      "name": "Straight Leg Raise",
+      "category": "strengthening",
+      "difficulty_level": 2,
+      "target_muscles": [
+        "quadriceps",
+        "hip_flexors"
+      ],
+      "equipment_needed": "mat",
+      "position": "lying_supine",
+      "severity_appropriate": [
+        1,
+        2,
+        3
+      ],
+      "pain_tolerance_required": "moderate",
+      "repetitions": "8-15",
+      "sets": "2-3",
+      "frequency": "1-3 times daily",
+      "instructions": [
+        "Detailed step 1",
+        "Detailed step 2",
+        "Continue through full movement"
+      ],
+      "contraindications": [
+        "acute_knee_swelling",
+        "severe_pain_during_exercise"
+      ],
+      "safety_cues": [
+        "Keep breathing normally",
+        "Stop if sharp pain occurs"
+      ],
+      "expected_sensations": "Muscle work without joint pain",
+      "modifications": {
+        "easier": "Reduce range of motion",
+        "harder": "Add resistance or hold longer"
+      }
+    }
+  ],
+  "exercise_progressions": [
+    {
+      "progression_id": "PROG001",
+      "name": "Beginner Knee Strengthening Pathway",
+      "target_severity": [
+        3,
+        4
+      ],
+      "duration_weeks": "2-4 weeks",
+      "exercise_sequence": [
+        "EX001",
+        "EX007",
+        "EX003",
+        "EX002"
+      ],
+      "advancement_criteria": "Can perform all exercises with pain \u22643/10"
+    },
+    {
+      "progression_id": "PROG002",
+      "name": "Intermediate Strengthening Pathway",
+      "target_severity": [
+        2,
+        3
+      ],
+      "duration_weeks": "3-6 weeks",
+      "exercise_sequence": [
+        "EX001",
+        "EX002",
+        "EX004",
+        "EX005"
+      ],
+      "advancement_criteria": "Pain \u22644/10, can do 15 reps"
+    },
+    {
+      "progression_id": "PROG003",
+      "name": "Advanced Functional Pathway",
+      "target_severity": [
+        1,
+        2
+      ],
+      "duration_weeks": "4-8 weeks",
+      "exercise_sequence": [
+        "EX005",
+        "EX009",
+        "EX010",
+        "EX018"
+      ],
+      "advancement_criteria": "Can climb stairs, walk 30+ minutes"
+    }
+  ],
+  "patient_profiles": [
+    {
+      "patient_id": "P001",
+      "age": 54,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 8,
+      "rom_flexion_degrees": 81,
+      "rom_extension_degrees": -5,
+      "comorbidities": [],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "garden",
+        "reduce_pain",
+        "walk_30_minutes",
+        "return_to_sports"
+      ],
+      "barriers_to_exercise": [
+        "pain"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P002",
+      "age": 69,
+      "gender": "male",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 95,
+      "rom_extension_degrees": -10,
+      "comorbidities": [
+        "obesity"
+      ],
+      "activity_level": "active",
+      "activity_goals": [
+        "garden",
+        "return_to_sports"
+      ],
+      "barriers_to_exercise": [
+        "fatigue"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P003",
+      "age": 70,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 5,
+      "rom_flexion_degrees": 126,
+      "rom_extension_degrees": -6,
+      "comorbidities": [
+        "osteoporosis",
+        "none",
+        "diabetes"
+      ],
+      "activity_level": "active",
+      "activity_goals": [
+        "return_to_sports",
+        "walk_30_minutes",
+        "reduce_pain",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "pain"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P004",
+      "age": 85,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 98,
+      "rom_extension_degrees": -6,
+      "comorbidities": [
+        "obesity"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "walk_30_minutes",
+        "play_with_grandchildren",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "lack_of_motivation",
+        "balance_issues"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P005",
+      "age": 80,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 6,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 122,
+      "rom_extension_degrees": -8,
+      "comorbidities": [],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "reduce_pain",
+        "play_with_grandchildren",
+        "return_to_sports"
+      ],
+      "barriers_to_exercise": [
+        "lack_of_motivation",
+        "fatigue",
+        "pain"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P006",
+      "age": 60,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 126,
+      "rom_extension_degrees": -8,
+      "comorbidities": [
+        "diabetes"
+      ],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "walk_30_minutes",
+        "return_to_sports",
+        "reduce_pain"
+      ],
+      "barriers_to_exercise": [
+        "pain"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P007",
+      "age": 64,
+      "gender": "male",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 6,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 93,
+      "rom_extension_degrees": -6,
+      "comorbidities": [
+        "obesity"
+      ],
+      "activity_level": "active",
+      "activity_goals": [
+        "return_to_sports",
+        "play_with_grandchildren"
+      ],
+      "barriers_to_exercise": [
+        "balance_issues"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P008",
+      "age": 58,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 90,
+      "rom_extension_degrees": -6,
+      "comorbidities": [],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "climb_stairs_easily",
+        "reduce_pain",
+        "return_to_sports",
+        "play_with_grandchildren"
+      ],
+      "barriers_to_exercise": [
+        "fatigue",
+        "fear_of_falling"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P009",
+      "age": 72,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 102,
+      "rom_extension_degrees": -9,
+      "comorbidities": [
+        "heart_disease",
+        "none",
+        "obesity"
+      ],
+      "activity_level": "active",
+      "activity_goals": [
+        "garden",
+        "walk_30_minutes",
+        "play_with_grandchildren",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "fear_of_falling",
+        "morning_stiffness",
+        "balance_issues"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P010",
+      "age": 52,
+      "gender": "male",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 4,
+      "rom_flexion_degrees": 129,
+      "rom_extension_degrees": -3,
+      "comorbidities": [
+        "none",
+        "heart_disease",
+        "diabetes"
+      ],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "garden",
+        "walk_30_minutes",
+        "play_with_grandchildren"
+      ],
+      "barriers_to_exercise": [
+        "fear_of_falling",
+        "pain",
+        "morning_stiffness"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P011",
+      "age": 76,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 102,
+      "rom_extension_degrees": -9,
+      "comorbidities": [
+        "obesity",
+        "none"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "climb_stairs_easily",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "morning_stiffness",
+        "lack_of_motivation",
+        "pain"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P012",
+      "age": 74,
+      "gender": "male",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 5,
+      "pain_level_with_activity": 8,
+      "rom_flexion_degrees": 102,
+      "rom_extension_degrees": -8,
+      "comorbidities": [],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "play_with_grandchildren",
+        "reduce_pain",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "lack_of_motivation",
+        "balance_issues",
+        "fatigue"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P013",
+      "age": 73,
+      "gender": "female",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 8,
+      "rom_flexion_degrees": 113,
+      "rom_extension_degrees": -4,
+      "comorbidities": [],
+      "activity_level": "active",
+      "activity_goals": [
+        "climb_stairs_easily",
+        "garden",
+        "play_with_grandchildren",
+        "return_to_sports"
+      ],
+      "barriers_to_exercise": [
+        "pain",
+        "fatigue"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P014",
+      "age": 67,
+      "gender": "male",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 94,
+      "rom_extension_degrees": -7,
+      "comorbidities": [
+        "osteoporosis"
+      ],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "walk_30_minutes",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "fatigue",
+        "morning_stiffness",
+        "lack_of_motivation"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P015",
+      "age": 79,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 94,
+      "rom_extension_degrees": -9,
+      "comorbidities": [],
+      "activity_level": "active",
+      "activity_goals": [
+        "play_with_grandchildren",
+        "return_to_sports",
+        "climb_stairs_easily",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "fear_of_falling"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P016",
+      "age": 79,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 4,
+      "rom_flexion_degrees": 115,
+      "rom_extension_degrees": -9,
+      "comorbidities": [],
+      "activity_level": "active",
+      "activity_goals": [
+        "reduce_pain",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "fatigue"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P017",
+      "age": 73,
+      "gender": "male",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 7,
+      "rom_flexion_degrees": 99,
+      "rom_extension_degrees": -3,
+      "comorbidities": [
+        "osteoporosis"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "return_to_sports",
+        "garden",
+        "climb_stairs_easily",
+        "walk_30_minutes"
+      ],
+      "barriers_to_exercise": [
+        "fatigue",
+        "balance_issues",
+        "fear_of_falling"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P018",
+      "age": 78,
+      "gender": "male",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 127,
+      "rom_extension_degrees": -1,
+      "comorbidities": [],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "play_with_grandchildren",
+        "walk_30_minutes",
+        "reduce_pain",
+        "return_to_sports"
+      ],
+      "barriers_to_exercise": [
+        "fatigue",
+        "fear_of_falling",
+        "morning_stiffness"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P019",
+      "age": 69,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 5,
+      "rom_flexion_degrees": 85,
+      "rom_extension_degrees": 0,
+      "comorbidities": [
+        "none",
+        "obesity"
+      ],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "reduce_pain",
+        "play_with_grandchildren"
+      ],
+      "barriers_to_exercise": [
+        "fatigue",
+        "balance_issues"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P020",
+      "age": 51,
+      "gender": "male",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 4,
+      "rom_flexion_degrees": 114,
+      "rom_extension_degrees": -5,
+      "comorbidities": [
+        "obesity",
+        "osteoporosis"
+      ],
+      "activity_level": "lightly_active",
+      "activity_goals": [
+        "play_with_grandchildren",
+        "climb_stairs_easily",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "morning_stiffness",
+        "fatigue",
+        "lack_of_motivation"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P021",
+      "age": 62,
+      "gender": "male",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 6,
+      "pain_level_with_activity": 7,
+      "rom_flexion_degrees": 124,
+      "rom_extension_degrees": -2,
+      "comorbidities": [
+        "hypertension"
+      ],
+      "activity_level": "lightly_active",
+      "activity_goals": [
+        "return_to_sports",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "morning_stiffness"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P022",
+      "age": 60,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 8,
+      "rom_flexion_degrees": 106,
+      "rom_extension_degrees": -10,
+      "comorbidities": [
+        "none",
+        "hypertension",
+        "obesity"
+      ],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "climb_stairs_easily",
+        "garden",
+        "play_with_grandchildren"
+      ],
+      "barriers_to_exercise": [
+        "fear_of_falling",
+        "pain"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P023",
+      "age": 61,
+      "gender": "male",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 8,
+      "rom_flexion_degrees": 102,
+      "rom_extension_degrees": -5,
+      "comorbidities": [
+        "obesity",
+        "hypertension"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "garden",
+        "play_with_grandchildren",
+        "walk_30_minutes",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "fatigue",
+        "fear_of_falling"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P024",
+      "age": 73,
+      "gender": "male",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 5,
+      "rom_flexion_degrees": 127,
+      "rom_extension_degrees": -4,
+      "comorbidities": [
+        "heart_disease"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "walk_30_minutes",
+        "return_to_sports",
+        "climb_stairs_easily",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "morning_stiffness",
+        "fatigue"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P025",
+      "age": 60,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 8,
+      "rom_flexion_degrees": 85,
+      "rom_extension_degrees": -1,
+      "comorbidities": [
+        "diabetes"
+      ],
+      "activity_level": "lightly_active",
+      "activity_goals": [
+        "climb_stairs_easily",
+        "walk_30_minutes",
+        "reduce_pain"
+      ],
+      "barriers_to_exercise": [
+        "morning_stiffness"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P026",
+      "age": 56,
+      "gender": "female",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 6,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 80,
+      "rom_extension_degrees": 0,
+      "comorbidities": [],
+      "activity_level": "lightly_active",
+      "activity_goals": [
+        "walk_30_minutes",
+        "climb_stairs_easily",
+        "garden",
+        "reduce_pain"
+      ],
+      "barriers_to_exercise": [
+        "balance_issues",
+        "fear_of_falling"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P027",
+      "age": 74,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 113,
+      "rom_extension_degrees": -7,
+      "comorbidities": [],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "play_with_grandchildren",
+        "garden",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "pain"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P028",
+      "age": 53,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 7,
+      "rom_flexion_degrees": 107,
+      "rom_extension_degrees": -5,
+      "comorbidities": [
+        "hypertension"
+      ],
+      "activity_level": "lightly_active",
+      "activity_goals": [
+        "reduce_pain",
+        "climb_stairs_easily",
+        "play_with_grandchildren",
+        "walk_30_minutes"
+      ],
+      "barriers_to_exercise": [
+        "pain"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P029",
+      "age": 55,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 5,
+      "rom_flexion_degrees": 113,
+      "rom_extension_degrees": -10,
+      "comorbidities": [],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "play_with_grandchildren",
+        "return_to_sports",
+        "climb_stairs_easily",
+        "walk_30_minutes"
+      ],
+      "barriers_to_exercise": [
+        "fear_of_falling",
+        "morning_stiffness"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P030",
+      "age": 53,
+      "gender": "male",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 108,
+      "rom_extension_degrees": -10,
+      "comorbidities": [
+        "diabetes",
+        "none"
+      ],
+      "activity_level": "active",
+      "activity_goals": [
+        "play_with_grandchildren",
+        "reduce_pain",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "fatigue"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P031",
+      "age": 50,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 4,
+      "rom_flexion_degrees": 80,
+      "rom_extension_degrees": -1,
+      "comorbidities": [
+        "diabetes"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "garden",
+        "climb_stairs_easily",
+        "return_to_sports",
+        "reduce_pain"
+      ],
+      "barriers_to_exercise": [
+        "pain"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P032",
+      "age": 79,
+      "gender": "female",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 105,
+      "rom_extension_degrees": -6,
+      "comorbidities": [],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "play_with_grandchildren",
+        "climb_stairs_easily",
+        "return_to_sports",
+        "reduce_pain"
+      ],
+      "barriers_to_exercise": [
+        "lack_of_motivation",
+        "balance_issues",
+        "morning_stiffness"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P033",
+      "age": 83,
+      "gender": "female",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 124,
+      "rom_extension_degrees": -7,
+      "comorbidities": [],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "play_with_grandchildren",
+        "garden",
+        "walk_30_minutes"
+      ],
+      "barriers_to_exercise": [
+        "balance_issues"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P034",
+      "age": 72,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 5,
+      "rom_flexion_degrees": 95,
+      "rom_extension_degrees": -9,
+      "comorbidities": [
+        "hypertension",
+        "osteoporosis",
+        "diabetes"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "climb_stairs_easily",
+        "play_with_grandchildren",
+        "return_to_sports"
+      ],
+      "barriers_to_exercise": [
+        "morning_stiffness",
+        "pain"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P035",
+      "age": 53,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 7,
+      "rom_flexion_degrees": 121,
+      "rom_extension_degrees": -7,
+      "comorbidities": [
+        "none",
+        "diabetes",
+        "obesity"
+      ],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "reduce_pain",
+        "walk_30_minutes"
+      ],
+      "barriers_to_exercise": [
+        "fear_of_falling",
+        "pain"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P036",
+      "age": 57,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 5,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 80,
+      "rom_extension_degrees": -5,
+      "comorbidities": [
+        "heart_disease"
+      ],
+      "activity_level": "lightly_active",
+      "activity_goals": [
+        "walk_30_minutes",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "fatigue"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P037",
+      "age": 85,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 6,
+      "pain_level_with_activity": 4,
+      "rom_flexion_degrees": 122,
+      "rom_extension_degrees": -7,
+      "comorbidities": [
+        "hypertension",
+        "heart_disease",
+        "obesity"
+      ],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "garden",
+        "reduce_pain",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "morning_stiffness"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P038",
+      "age": 60,
+      "gender": "female",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 5,
+      "rom_flexion_degrees": 111,
+      "rom_extension_degrees": -9,
+      "comorbidities": [
+        "diabetes",
+        "obesity"
+      ],
+      "activity_level": "lightly_active",
+      "activity_goals": [
+        "reduce_pain",
+        "climb_stairs_easily",
+        "play_with_grandchildren"
+      ],
+      "barriers_to_exercise": [
+        "lack_of_motivation",
+        "fatigue",
+        "balance_issues"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P039",
+      "age": 54,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 93,
+      "rom_extension_degrees": -9,
+      "comorbidities": [
+        "diabetes",
+        "osteoporosis",
+        "obesity"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "garden",
+        "play_with_grandchildren",
+        "walk_30_minutes"
+      ],
+      "barriers_to_exercise": [
+        "lack_of_motivation"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P040",
+      "age": 69,
+      "gender": "male",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 6,
+      "pain_level_with_activity": 4,
+      "rom_flexion_degrees": 109,
+      "rom_extension_degrees": -10,
+      "comorbidities": [
+        "diabetes",
+        "hypertension",
+        "heart_disease"
+      ],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "walk_30_minutes",
+        "return_to_sports",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "fear_of_falling"
+      ],
+      "recommended_progression": "PROG003"
+    },
+    {
+      "patient_id": "P041",
+      "age": 58,
+      "gender": "female",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 7,
+      "rom_flexion_degrees": 89,
+      "rom_extension_degrees": -4,
+      "comorbidities": [
+        "hypertension",
+        "diabetes",
+        "osteoporosis"
+      ],
+      "activity_level": "sedentary",
+      "activity_goals": [
+        "return_to_sports",
+        "climb_stairs_easily",
+        "walk_30_minutes",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "morning_stiffness"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P042",
+      "age": 50,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 7,
+      "rom_flexion_degrees": 117,
+      "rom_extension_degrees": -1,
+      "comorbidities": [
+        "osteoporosis",
+        "hypertension",
+        "diabetes"
+      ],
+      "activity_level": "active",
+      "activity_goals": [
+        "walk_30_minutes",
+        "garden",
+        "climb_stairs_easily",
+        "return_to_sports"
+      ],
+      "barriers_to_exercise": [
+        "balance_issues"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P043",
+      "age": 66,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 9,
+      "rom_flexion_degrees": 119,
+      "rom_extension_degrees": -3,
+      "comorbidities": [
+        "heart_disease",
+        "obesity",
+        "hypertension"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "reduce_pain",
+        "play_with_grandchildren"
+      ],
+      "barriers_to_exercise": [
+        "fear_of_falling",
+        "pain"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P044",
+      "age": 59,
+      "gender": "female",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 6,
+      "rom_flexion_degrees": 117,
+      "rom_extension_degrees": -8,
+      "comorbidities": [],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "return_to_sports",
+        "walk_30_minutes",
+        "climb_stairs_easily"
+      ],
+      "barriers_to_exercise": [
+        "morning_stiffness"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P045",
+      "age": 62,
+      "gender": "female",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 8,
+      "rom_flexion_degrees": 117,
+      "rom_extension_degrees": -1,
+      "comorbidities": [
+        "heart_disease",
+        "none"
+      ],
+      "activity_level": "active",
+      "activity_goals": [
+        "garden",
+        "walk_30_minutes",
+        "return_to_sports"
+      ],
+      "barriers_to_exercise": [
+        "fatigue"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P046",
+      "age": 54,
+      "gender": "male",
+      "knee_condition": "bilateral_osteoarthritis",
+      "severity": 3,
+      "pain_level_at_rest": 5,
+      "pain_level_with_activity": 7,
+      "rom_flexion_degrees": 99,
+      "rom_extension_degrees": -3,
+      "comorbidities": [
+        "none",
+        "hypertension",
+        "heart_disease"
+      ],
+      "activity_level": "moderately_active",
+      "activity_goals": [
+        "climb_stairs_easily",
+        "play_with_grandchildren",
+        "return_to_sports",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "lack_of_motivation",
+        "fear_of_falling"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P047",
+      "age": 72,
+      "gender": "male",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 1,
+      "pain_level_at_rest": 1,
+      "pain_level_with_activity": 7,
+      "rom_flexion_degrees": 91,
+      "rom_extension_degrees": -9,
+      "comorbidities": [
+        "hypertension",
+        "diabetes"
+      ],
+      "activity_level": "lightly_active",
+      "activity_goals": [
+        "climb_stairs_easily",
+        "garden",
+        "walk_30_minutes"
+      ],
+      "barriers_to_exercise": [
+        "fatigue"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P048",
+      "age": 61,
+      "gender": "male",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 3,
+      "pain_level_with_activity": 8,
+      "rom_flexion_degrees": 120,
+      "rom_extension_degrees": -3,
+      "comorbidities": [
+        "osteoporosis",
+        "diabetes",
+        "hypertension"
+      ],
+      "activity_level": "active",
+      "activity_goals": [
+        "walk_30_minutes",
+        "return_to_sports",
+        "reduce_pain"
+      ],
+      "barriers_to_exercise": [
+        "balance_issues",
+        "fear_of_falling",
+        "pain"
+      ],
+      "recommended_progression": "PROG001"
+    },
+    {
+      "patient_id": "P049",
+      "age": 63,
+      "gender": "male",
+      "knee_condition": "unilateral_right_osteoarthritis",
+      "severity": 4,
+      "pain_level_at_rest": 2,
+      "pain_level_with_activity": 7,
+      "rom_flexion_degrees": 82,
+      "rom_extension_degrees": -10,
+      "comorbidities": [],
+      "activity_level": "active",
+      "activity_goals": [
+        "garden",
+        "reduce_pain"
+      ],
+      "barriers_to_exercise": [
+        "lack_of_motivation"
+      ],
+      "recommended_progression": "PROG002"
+    },
+    {
+      "patient_id": "P050",
+      "age": 58,
+      "gender": "male",
+      "knee_condition": "unilateral_left_osteoarthritis",
+      "severity": 2,
+      "pain_level_at_rest": 4,
+      "pain_level_with_activity": 5,
+      "rom_flexion_degrees": 106,
+      "rom_extension_degrees": -2,
+      "comorbidities": [
+        "diabetes"
+      ],
+      "activity_level": "active",
+      "activity_goals": [
+        "climb_stairs_easily",
+        "garden"
+      ],
+      "barriers_to_exercise": [
+        "fear_of_falling",
+        "pain",
+        "fatigue"
+      ],
+      "recommended_progression": "PROG003"
+    }
+  ],
+  "educational_content": [
+    {
+      "topic_id": "EDU001",
+      "title": "Understanding Knee Osteoarthritis",
+      "category": "condition_education",
+      "content": "Comprehensive explanation of understanding knee osteoarthritis. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about Understanding Knee Osteoarthritis",
+        "Key point 2 about Understanding Knee Osteoarthritis",
+        "Key point 3 about Understanding Knee Osteoarthritis"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    },
+    {
+      "topic_id": "EDU002",
+      "title": "Why Exercise Helps",
+      "category": "treatment_rationale",
+      "content": "Comprehensive explanation of why exercise helps. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about Why Exercise Helps",
+        "Key point 2 about Why Exercise Helps",
+        "Key point 3 about Why Exercise Helps"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    },
+    {
+      "topic_id": "EDU003",
+      "title": "Understanding Pain Signals",
+      "category": "pain_management",
+      "content": "Comprehensive explanation of understanding pain signals. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about Understanding Pain Signals",
+        "Key point 2 about Understanding Pain Signals",
+        "Key point 3 about Understanding Pain Signals"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    },
+    {
+      "topic_id": "EDU004",
+      "title": "The 2-Hour Pain Rule",
+      "category": "pain_management",
+      "content": "Comprehensive explanation of the 2-hour pain rule. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about The 2-Hour Pain Rule",
+        "Key point 2 about The 2-Hour Pain Rule",
+        "Key point 3 about The 2-Hour Pain Rule"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    },
+    {
+      "topic_id": "EDU005",
+      "title": "Morning Stiffness Management",
+      "category": "symptom_management",
+      "content": "Comprehensive explanation of morning stiffness management. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about Morning Stiffness Management",
+        "Key point 2 about Morning Stiffness Management",
+        "Key point 3 about Morning Stiffness Management"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    },
+    {
+      "topic_id": "EDU006",
+      "title": "Weight and Joint Health",
+      "category": "lifestyle_factors",
+      "content": "Comprehensive explanation of weight and joint health. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about Weight and Joint Health",
+        "Key point 2 about Weight and Joint Health",
+        "Key point 3 about Weight and Joint Health"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    },
+    {
+      "topic_id": "EDU007",
+      "title": "Ice vs Heat Therapy",
+      "category": "pain_management",
+      "content": "Comprehensive explanation of ice vs heat therapy. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about Ice vs Heat Therapy",
+        "Key point 2 about Ice vs Heat Therapy",
+        "Key point 3 about Ice vs Heat Therapy"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    },
+    {
+      "topic_id": "EDU008",
+      "title": "Building Exercise Habits",
+      "category": "adherence_motivation",
+      "content": "Comprehensive explanation of building exercise habits. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about Building Exercise Habits",
+        "Key point 2 about Building Exercise Habits",
+        "Key point 3 about Building Exercise Habits"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    },
+    {
+      "topic_id": "EDU009",
+      "title": "Proper Footwear",
+      "category": "lifestyle_factors",
+      "content": "Comprehensive explanation of proper footwear. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about Proper Footwear",
+        "Key point 2 about Proper Footwear",
+        "Key point 3 about Proper Footwear"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    },
+    {
+      "topic_id": "EDU010",
+      "title": "Weather and Arthritis",
+      "category": "symptom_management",
+      "content": "Comprehensive explanation of weather and arthritis. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+      "key_takeaways": [
+        "Key point 1 about Weather and Arthritis",
+        "Key point 2 about Weather and Arthritis",
+        "Key point 3 about Weather and Arthritis"
+      ],
+      "related_exercises": [
+        "EX001",
+        "EX002",
+        "EX003"
+      ]
+    }
+  ],
+  "qa_pairs": [
+    {
+      "question_id": "QA001",
+      "question": "How often should I exercise?",
+      "answer": "Detailed answer to 'How often should I exercise?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "exercise_frequency",
+      "related_exercises": [
+        "EX001",
+        "EX002"
+      ]
+    },
+    {
+      "question_id": "QA002",
+      "question": "How long until I see results?",
+      "answer": "Detailed answer to 'How long until I see results?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "timeline_expectations",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA003",
+      "question": "Can I exercise with swelling?",
+      "answer": "Detailed answer to 'Can I exercise with swelling?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "pain_symptom_management",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA004",
+      "question": "Should I exercise when in pain?",
+      "answer": "Detailed answer to 'Should I exercise when in pain?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "pain_symptom_management",
+      "related_exercises": [
+        "EX001",
+        "EX002"
+      ]
+    },
+    {
+      "question_id": "QA005",
+      "question": "What if I can't do full reps?",
+      "answer": "Detailed answer to 'What if I can't do full reps?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "exercise_modification",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA006",
+      "question": "Is it normal to feel worse first?",
+      "answer": "Detailed answer to 'Is it normal to feel worse first?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "timeline_expectations",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA007",
+      "question": "Can I exercise before surgery?",
+      "answer": "Detailed answer to 'Can I exercise before surgery?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "special_situations",
+      "related_exercises": [
+        "EX001",
+        "EX002"
+      ]
+    },
+    {
+      "question_id": "QA008",
+      "question": "Should I take pain meds before?",
+      "answer": "Detailed answer to 'Should I take pain meds before?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "medication_exercise",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA009",
+      "question": "What about cracking sounds?",
+      "answer": "Detailed answer to 'What about cracking sounds?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "symptoms_concerns",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA010",
+      "question": "Can I do water exercises?",
+      "answer": "Detailed answer to 'Can I do water exercises?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "exercise_alternatives",
+      "related_exercises": [
+        "EX001",
+        "EX002"
+      ]
+    },
+    {
+      "question_id": "QA011",
+      "question": "When should I progress?",
+      "answer": "Detailed answer to 'When should I progress?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "progression_advancement",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA012",
+      "question": "What if I miss days/weeks?",
+      "answer": "Detailed answer to 'What if I miss days/weeks?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "adherence_motivation",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA013",
+      "question": "Will exercise damage my joint?",
+      "answer": "Detailed answer to 'Will exercise damage my joint?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "fears_misconceptions",
+      "related_exercises": [
+        "EX001",
+        "EX002"
+      ]
+    },
+    {
+      "question_id": "QA014",
+      "question": "Should I take rest days?",
+      "answer": "Detailed answer to 'Should I take rest days?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "exercise_frequency",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA015",
+      "question": "Arthritis vs injury pain?",
+      "answer": "Detailed answer to 'Arthritis vs injury pain?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "pain_symptom_management",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA016",
+      "question": "Multiple joint arthritis?",
+      "answer": "Detailed answer to 'Multiple joint arthritis?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "special_situations",
+      "related_exercises": [
+        "EX001",
+        "EX002"
+      ]
+    },
+    {
+      "question_id": "QA017",
+      "question": "How important is form?",
+      "answer": "Detailed answer to 'How important is form?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "exercise_technique",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA018",
+      "question": "Can I modify exercises?",
+      "answer": "Detailed answer to 'Can I modify exercises?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "exercise_modification",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA019",
+      "question": "What about flare-ups?",
+      "answer": "Detailed answer to 'What about flare-ups?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "pain_symptom_management",
+      "related_exercises": [
+        "EX001",
+        "EX002"
+      ]
+    },
+    {
+      "question_id": "QA020",
+      "question": "How to stay motivated?",
+      "answer": "Detailed answer to 'How to stay motivated?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+      "category": "adherence_motivation",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA021",
+      "question": "What time of day is best to exercise?",
+      "answer": "Comprehensive answer addressing what time of day is best to exercise? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA022",
+      "question": "How do I know if swelling is serious?",
+      "answer": "Comprehensive answer addressing how do i know if swelling is serious? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA023",
+      "question": "Can I exercise during a flare-up?",
+      "answer": "Comprehensive answer addressing can i exercise during a flare-up? with practical guidance and evidence-based recommendations.",
+      "category": "pain_management",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA024",
+      "question": "Should I use a knee brace?",
+      "answer": "Comprehensive answer addressing should i use a knee brace? with practical guidance and evidence-based recommendations.",
+      "category": "pain_management",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA025",
+      "question": "What about supplements like glucosamine?",
+      "answer": "Comprehensive answer addressing what about supplements like glucosamine? with practical guidance and evidence-based recommendations.",
+      "category": "exercise_technique",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA026",
+      "question": "How does cold weather affect my knee?",
+      "answer": "Comprehensive answer addressing how does cold weather affect my knee? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA027",
+      "question": "Can I do yoga with knee arthritis?",
+      "answer": "Comprehensive answer addressing can i do yoga with knee arthritis? with practical guidance and evidence-based recommendations.",
+      "category": "pain_management",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA028",
+      "question": "What if one knee is worse than the other?",
+      "answer": "Comprehensive answer addressing what if one knee is worse than the other? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA029",
+      "question": "Should I exercise before or after meals?",
+      "answer": "Comprehensive answer addressing should i exercise before or after meals? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA030",
+      "question": "How long should each session be?",
+      "answer": "Comprehensive answer addressing how long should each session be? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA031",
+      "question": "What if I have balance problems?",
+      "answer": "Comprehensive answer addressing what if i have balance problems? with practical guidance and evidence-based recommendations.",
+      "category": "pain_management",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA032",
+      "question": "Can I use an exercise bike?",
+      "answer": "Comprehensive answer addressing can i use an exercise bike? with practical guidance and evidence-based recommendations.",
+      "category": "exercise_technique",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA033",
+      "question": "Should I exercise if I'm tired?",
+      "answer": "Comprehensive answer addressing should i exercise if i'm tired? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA034",
+      "question": "What about resistance bands?",
+      "answer": "Comprehensive answer addressing what about resistance bands? with practical guidance and evidence-based recommendations.",
+      "category": "exercise_technique",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA035",
+      "question": "How do I track my progress?",
+      "answer": "Comprehensive answer addressing how do i track my progress? with practical guidance and evidence-based recommendations.",
+      "category": "adherence_motivation",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA036",
+      "question": "What if exercises are too easy?",
+      "answer": "Comprehensive answer addressing what if exercises are too easy? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA037",
+      "question": "Should I tell my doctor?",
+      "answer": "Comprehensive answer addressing should i tell my doctor? with practical guidance and evidence-based recommendations.",
+      "category": "exercise_technique",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA038",
+      "question": "Can I exercise with a cold?",
+      "answer": "Comprehensive answer addressing can i exercise with a cold? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA039",
+      "question": "What about walking for exercise?",
+      "answer": "Comprehensive answer addressing what about walking for exercise? with practical guidance and evidence-based recommendations.",
+      "category": "pain_management",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA040",
+      "question": "How important is stretching?",
+      "answer": "Comprehensive answer addressing how important is stretching? with practical guidance and evidence-based recommendations.",
+      "category": "exercise_technique",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA041",
+      "question": "What if my knee clicks?",
+      "answer": "Comprehensive answer addressing what if my knee clicks? with practical guidance and evidence-based recommendations.",
+      "category": "adherence_motivation",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA042",
+      "question": "Should I ice after every session?",
+      "answer": "Comprehensive answer addressing should i ice after every session? with practical guidance and evidence-based recommendations.",
+      "category": "exercise_technique",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA043",
+      "question": "Can I do exercises in bed?",
+      "answer": "Comprehensive answer addressing can i do exercises in bed? with practical guidance and evidence-based recommendations.",
+      "category": "exercise_technique",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA044",
+      "question": "What about tai chi?",
+      "answer": "Comprehensive answer addressing what about tai chi? with practical guidance and evidence-based recommendations.",
+      "category": "exercise_technique",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA045",
+      "question": "How do I prevent flare-ups?",
+      "answer": "Comprehensive answer addressing how do i prevent flare-ups? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA046",
+      "question": "What if I have hip pain too?",
+      "answer": "Comprehensive answer addressing what if i have hip pain too? with practical guidance and evidence-based recommendations.",
+      "category": "pain_management",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA047",
+      "question": "Should I lose weight first?",
+      "answer": "Comprehensive answer addressing should i lose weight first? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA048",
+      "question": "Can I do high-impact exercise?",
+      "answer": "Comprehensive answer addressing can i do high-impact exercise? with practical guidance and evidence-based recommendations.",
+      "category": "adherence_motivation",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA049",
+      "question": "What about physical therapy?",
+      "answer": "Comprehensive answer addressing what about physical therapy? with practical guidance and evidence-based recommendations.",
+      "category": "pain_management",
+      "related_exercises": [
+        "all"
+      ]
+    },
+    {
+      "question_id": "QA050",
+      "question": "How do I know it's working?",
+      "answer": "Comprehensive answer addressing how do i know it's working? with practical guidance and evidence-based recommendations.",
+      "category": "equipment_alternatives",
+      "related_exercises": [
+        "all"
+      ]
+    }
+  ],
+  "query_variations": {
+    "exercise_requests": [
+      "What exercises can help my knee?",
+      "I need knee exercises",
+      "Show me how to strengthen my knee",
+      "Exercises for knee arthritis",
+      "My knee hurts going downstairs",
+      "Help with knee stiffness",
+      "Knee exercises for seniors",
+      "Gentle knee exercises",
+      "I can't bend my knee well",
+      "Exercises to reduce knee pain"
+    ],
+    "pain_queries": [
+      "My knee hurts when I exercise",
+      "Is this pain normal?",
+      "Sharp pain in knee",
+      "Knee swelling after exercise",
+      "How much pain is okay?",
+      "Knee hurts more at night",
+      "Pain behind my knee",
+      "Knee pain going away then coming back"
+    ],
+    "progression_queries": [
+      "When can I do harder exercises?",
+      "Exercises are getting too easy",
+      "How do I progress?",
+      "Ready for next level",
+      "What comes after beginner exercises?"
+    ],
+    "adherence_queries": [
+      "I missed a week of exercises",
+      "Haven't exercised in a month",
+      "How to get back on track?",
+      "Struggling to stay consistent",
+      "No motivation to exercise"
+    ]
+  },
+  "safety_guidelines": {
+    "red_flags": [
+      {
+        "symptom": "Sudden severe pain with swelling",
+        "action": "Stop exercising immediately, apply ice, see doctor within 24 hours"
+      },
+      {
+        "symptom": "Knee gives out or feels unstable",
+        "action": "Stop weight-bearing exercises, use support, consult healthcare provider"
+      },
+      {
+        "symptom": "Fever with joint pain and swelling",
+        "action": "Seek immediate medical attention - possible infection"
+      },
+      {
+        "symptom": "Chest pain or severe shortness of breath",
+        "action": "Stop exercise, call emergency services if severe"
+      }
+    ],
+    "general_safety_rules": [
+      "Never exercise through sharp pain",
+      "Use 4/10 pain rule during exercise",
+      "Apply 2-hour pain rule after exercise",
+      "Progress gradually - one variable at a time",
+      "Always warm up before strengthening",
+      "Stay hydrated",
+      "Wear appropriate footwear",
+      "Exercise in safe environment",
+      "Have support nearby for balance exercises",
+      "Listen to your body"
+    ],
+    "contraindications": {
+      "absolute": [
+        "Acute knee infection",
+        "Recent fracture without clearance",
+        "Severe uncontrolled pain",
+        "Suspected DVT",
+        "Acute ligament tear"
+      ],
+      "relative": [
+        "Moderate to severe swelling",
+        "Pain at rest >7/10",
+        "Recent flare-up <48 hours",
+        "Significant balance impairment without support",
+        "Uncontrolled cardiovascular condition"
+      ]
+    }
+  },
+  "dataset_statistics": {
+    "total_exercises": 2,
+    "total_progressions": 3,
+    "total_patient_profiles": 50,
+    "total_educational_topics": 10,
+    "total_qa_pairs": 50,
+    "total_query_variations": 28,
+    "severity_levels": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "difficulty_levels": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "exercise_categories": [
+      "strengthening",
+      "flexibility",
+      "balance",
+      "range_of_motion",
+      "functional"
+    ]
+  }
+}

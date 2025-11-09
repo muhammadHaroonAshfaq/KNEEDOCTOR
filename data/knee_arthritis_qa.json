@@ -1,0 +1,459 @@
+[
+  {
+    "question_id": "QA001",
+    "question": "How often should I exercise?",
+    "answer": "Detailed answer to 'How often should I exercise?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "exercise_frequency",
+    "related_exercises": [
+      "EX001",
+      "EX002"
+    ]
+  },
+  {
+    "question_id": "QA002",
+    "question": "How long until I see results?",
+    "answer": "Detailed answer to 'How long until I see results?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "timeline_expectations",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA003",
+    "question": "Can I exercise with swelling?",
+    "answer": "Detailed answer to 'Can I exercise with swelling?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "pain_symptom_management",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA004",
+    "question": "Should I exercise when in pain?",
+    "answer": "Detailed answer to 'Should I exercise when in pain?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "pain_symptom_management",
+    "related_exercises": [
+      "EX001",
+      "EX002"
+    ]
+  },
+  {
+    "question_id": "QA005",
+    "question": "What if I can't do full reps?",
+    "answer": "Detailed answer to 'What if I can't do full reps?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "exercise_modification",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA006",
+    "question": "Is it normal to feel worse first?",
+    "answer": "Detailed answer to 'Is it normal to feel worse first?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "timeline_expectations",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA007",
+    "question": "Can I exercise before surgery?",
+    "answer": "Detailed answer to 'Can I exercise before surgery?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "special_situations",
+    "related_exercises": [
+      "EX001",
+      "EX002"
+    ]
+  },
+  {
+    "question_id": "QA008",
+    "question": "Should I take pain meds before?",
+    "answer": "Detailed answer to 'Should I take pain meds before?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "medication_exercise",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA009",
+    "question": "What about cracking sounds?",
+    "answer": "Detailed answer to 'What about cracking sounds?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "symptoms_concerns",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA010",
+    "question": "Can I do water exercises?",
+    "answer": "Detailed answer to 'Can I do water exercises?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "exercise_alternatives",
+    "related_exercises": [
+      "EX001",
+      "EX002"
+    ]
+  },
+  {
+    "question_id": "QA011",
+    "question": "When should I progress?",
+    "answer": "Detailed answer to 'When should I progress?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "progression_advancement",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA012",
+    "question": "What if I miss days/weeks?",
+    "answer": "Detailed answer to 'What if I miss days/weeks?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "adherence_motivation",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA013",
+    "question": "Will exercise damage my joint?",
+    "answer": "Detailed answer to 'Will exercise damage my joint?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "fears_misconceptions",
+    "related_exercises": [
+      "EX001",
+      "EX002"
+    ]
+  },
+  {
+    "question_id": "QA014",
+    "question": "Should I take rest days?",
+    "answer": "Detailed answer to 'Should I take rest days?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "exercise_frequency",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA015",
+    "question": "Arthritis vs injury pain?",
+    "answer": "Detailed answer to 'Arthritis vs injury pain?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "pain_symptom_management",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA016",
+    "question": "Multiple joint arthritis?",
+    "answer": "Detailed answer to 'Multiple joint arthritis?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "special_situations",
+    "related_exercises": [
+      "EX001",
+      "EX002"
+    ]
+  },
+  {
+    "question_id": "QA017",
+    "question": "How important is form?",
+    "answer": "Detailed answer to 'How important is form?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "exercise_technique",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA018",
+    "question": "Can I modify exercises?",
+    "answer": "Detailed answer to 'Can I modify exercises?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "exercise_modification",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA019",
+    "question": "What about flare-ups?",
+    "answer": "Detailed answer to 'What about flare-ups?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "pain_symptom_management",
+    "related_exercises": [
+      "EX001",
+      "EX002"
+    ]
+  },
+  {
+    "question_id": "QA020",
+    "question": "How to stay motivated?",
+    "answer": "Detailed answer to 'How to stay motivated?'. This response provides evidence-based guidance, practical tips, and safety considerations. It addresses common concerns while encouraging appropriate exercise participation. The answer includes specific recommendations that can be immediately applied.",
+    "category": "adherence_motivation",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA021",
+    "question": "What time of day is best to exercise?",
+    "answer": "Comprehensive answer addressing what time of day is best to exercise? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA022",
+    "question": "How do I know if swelling is serious?",
+    "answer": "Comprehensive answer addressing how do i know if swelling is serious? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA023",
+    "question": "Can I exercise during a flare-up?",
+    "answer": "Comprehensive answer addressing can i exercise during a flare-up? with practical guidance and evidence-based recommendations.",
+    "category": "pain_management",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA024",
+    "question": "Should I use a knee brace?",
+    "answer": "Comprehensive answer addressing should i use a knee brace? with practical guidance and evidence-based recommendations.",
+    "category": "pain_management",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA025",
+    "question": "What about supplements like glucosamine?",
+    "answer": "Comprehensive answer addressing what about supplements like glucosamine? with practical guidance and evidence-based recommendations.",
+    "category": "exercise_technique",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA026",
+    "question": "How does cold weather affect my knee?",
+    "answer": "Comprehensive answer addressing how does cold weather affect my knee? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA027",
+    "question": "Can I do yoga with knee arthritis?",
+    "answer": "Comprehensive answer addressing can i do yoga with knee arthritis? with practical guidance and evidence-based recommendations.",
+    "category": "pain_management",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA028",
+    "question": "What if one knee is worse than the other?",
+    "answer": "Comprehensive answer addressing what if one knee is worse than the other? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA029",
+    "question": "Should I exercise before or after meals?",
+    "answer": "Comprehensive answer addressing should i exercise before or after meals? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA030",
+    "question": "How long should each session be?",
+    "answer": "Comprehensive answer addressing how long should each session be? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA031",
+    "question": "What if I have balance problems?",
+    "answer": "Comprehensive answer addressing what if i have balance problems? with practical guidance and evidence-based recommendations.",
+    "category": "pain_management",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA032",
+    "question": "Can I use an exercise bike?",
+    "answer": "Comprehensive answer addressing can i use an exercise bike? with practical guidance and evidence-based recommendations.",
+    "category": "exercise_technique",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA033",
+    "question": "Should I exercise if I'm tired?",
+    "answer": "Comprehensive answer addressing should i exercise if i'm tired? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA034",
+    "question": "What about resistance bands?",
+    "answer": "Comprehensive answer addressing what about resistance bands? with practical guidance and evidence-based recommendations.",
+    "category": "exercise_technique",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA035",
+    "question": "How do I track my progress?",
+    "answer": "Comprehensive answer addressing how do i track my progress? with practical guidance and evidence-based recommendations.",
+    "category": "adherence_motivation",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA036",
+    "question": "What if exercises are too easy?",
+    "answer": "Comprehensive answer addressing what if exercises are too easy? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA037",
+    "question": "Should I tell my doctor?",
+    "answer": "Comprehensive answer addressing should i tell my doctor? with practical guidance and evidence-based recommendations.",
+    "category": "exercise_technique",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA038",
+    "question": "Can I exercise with a cold?",
+    "answer": "Comprehensive answer addressing can i exercise with a cold? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA039",
+    "question": "What about walking for exercise?",
+    "answer": "Comprehensive answer addressing what about walking for exercise? with practical guidance and evidence-based recommendations.",
+    "category": "pain_management",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA040",
+    "question": "How important is stretching?",
+    "answer": "Comprehensive answer addressing how important is stretching? with practical guidance and evidence-based recommendations.",
+    "category": "exercise_technique",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA041",
+    "question": "What if my knee clicks?",
+    "answer": "Comprehensive answer addressing what if my knee clicks? with practical guidance and evidence-based recommendations.",
+    "category": "adherence_motivation",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA042",
+    "question": "Should I ice after every session?",
+    "answer": "Comprehensive answer addressing should i ice after every session? with practical guidance and evidence-based recommendations.",
+    "category": "exercise_technique",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA043",
+    "question": "Can I do exercises in bed?",
+    "answer": "Comprehensive answer addressing can i do exercises in bed? with practical guidance and evidence-based recommendations.",
+    "category": "exercise_technique",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA044",
+    "question": "What about tai chi?",
+    "answer": "Comprehensive answer addressing what about tai chi? with practical guidance and evidence-based recommendations.",
+    "category": "exercise_technique",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA045",
+    "question": "How do I prevent flare-ups?",
+    "answer": "Comprehensive answer addressing how do i prevent flare-ups? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA046",
+    "question": "What if I have hip pain too?",
+    "answer": "Comprehensive answer addressing what if i have hip pain too? with practical guidance and evidence-based recommendations.",
+    "category": "pain_management",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA047",
+    "question": "Should I lose weight first?",
+    "answer": "Comprehensive answer addressing should i lose weight first? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA048",
+    "question": "Can I do high-impact exercise?",
+    "answer": "Comprehensive answer addressing can i do high-impact exercise? with practical guidance and evidence-based recommendations.",
+    "category": "adherence_motivation",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA049",
+    "question": "What about physical therapy?",
+    "answer": "Comprehensive answer addressing what about physical therapy? with practical guidance and evidence-based recommendations.",
+    "category": "pain_management",
+    "related_exercises": [
+      "all"
+    ]
+  },
+  {
+    "question_id": "QA050",
+    "question": "How do I know it's working?",
+    "answer": "Comprehensive answer addressing how do i know it's working? with practical guidance and evidence-based recommendations.",
+    "category": "equipment_alternatives",
+    "related_exercises": [
+      "all"
+    ]
+  }
+]

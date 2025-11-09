@@ -1,0 +1,50 @@
+[
+  {
+    "progression_id": "PROG001",
+    "name": "Beginner Knee Strengthening Pathway",
+    "target_severity": [
+      3,
+      4
+    ],
+    "duration_weeks": "2-4 weeks",
+    "exercise_sequence": [
+      "EX001",
+      "EX007",
+      "EX003",
+      "EX002"
+    ],
+    "advancement_criteria": "Can perform all exercises with pain \u22643/10"
+  },
+  {
+    "progression_id": "PROG002",
+    "name": "Intermediate Strengthening Pathway",
+    "target_severity": [
+      2,
+      3
+    ],
+    "duration_weeks": "3-6 weeks",
+    "exercise_sequence": [
+      "EX001",
+      "EX002",
+      "EX004",
+      "EX005"
+    ],
+    "advancement_criteria": "Pain \u22644/10, can do 15 reps"
+  },
+  {
+    "progression_id": "PROG003",
+    "name": "Advanced Functional Pathway",
+    "target_severity": [
+      1,
+      2
+    ],
+    "duration_weeks": "4-8 weeks",
+    "exercise_sequence": [
+      "EX005",
+      "EX009",
+      "EX010",
+      "EX018"
+    ],
+    "advancement_criteria": "Can climb stairs, walk 30+ minutes"
+  }
+]

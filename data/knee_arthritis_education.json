@@ -1,0 +1,162 @@
+[
+  {
+    "topic_id": "EDU001",
+    "title": "Understanding Knee Osteoarthritis",
+    "category": "condition_education",
+    "content": "Comprehensive explanation of understanding knee osteoarthritis. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about Understanding Knee Osteoarthritis",
+      "Key point 2 about Understanding Knee Osteoarthritis",
+      "Key point 3 about Understanding Knee Osteoarthritis"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  },
+  {
+    "topic_id": "EDU002",
+    "title": "Why Exercise Helps",
+    "category": "treatment_rationale",
+    "content": "Comprehensive explanation of why exercise helps. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about Why Exercise Helps",
+      "Key point 2 about Why Exercise Helps",
+      "Key point 3 about Why Exercise Helps"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  },
+  {
+    "topic_id": "EDU003",
+    "title": "Understanding Pain Signals",
+    "category": "pain_management",
+    "content": "Comprehensive explanation of understanding pain signals. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about Understanding Pain Signals",
+      "Key point 2 about Understanding Pain Signals",
+      "Key point 3 about Understanding Pain Signals"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  },
+  {
+    "topic_id": "EDU004",
+    "title": "The 2-Hour Pain Rule",
+    "category": "pain_management",
+    "content": "Comprehensive explanation of the 2-hour pain rule. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about The 2-Hour Pain Rule",
+      "Key point 2 about The 2-Hour Pain Rule",
+      "Key point 3 about The 2-Hour Pain Rule"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  },
+  {
+    "topic_id": "EDU005",
+    "title": "Morning Stiffness Management",
+    "category": "symptom_management",
+    "content": "Comprehensive explanation of morning stiffness management. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about Morning Stiffness Management",
+      "Key point 2 about Morning Stiffness Management",
+      "Key point 3 about Morning Stiffness Management"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  },
+  {
+    "topic_id": "EDU006",
+    "title": "Weight and Joint Health",
+    "category": "lifestyle_factors",
+    "content": "Comprehensive explanation of weight and joint health. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about Weight and Joint Health",
+      "Key point 2 about Weight and Joint Health",
+      "Key point 3 about Weight and Joint Health"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  },
+  {
+    "topic_id": "EDU007",
+    "title": "Ice vs Heat Therapy",
+    "category": "pain_management",
+    "content": "Comprehensive explanation of ice vs heat therapy. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about Ice vs Heat Therapy",
+      "Key point 2 about Ice vs Heat Therapy",
+      "Key point 3 about Ice vs Heat Therapy"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  },
+  {
+    "topic_id": "EDU008",
+    "title": "Building Exercise Habits",
+    "category": "adherence_motivation",
+    "content": "Comprehensive explanation of building exercise habits. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about Building Exercise Habits",
+      "Key point 2 about Building Exercise Habits",
+      "Key point 3 about Building Exercise Habits"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  },
+  {
+    "topic_id": "EDU009",
+    "title": "Proper Footwear",
+    "category": "lifestyle_factors",
+    "content": "Comprehensive explanation of proper footwear. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about Proper Footwear",
+      "Key point 2 about Proper Footwear",
+      "Key point 3 about Proper Footwear"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  },
+  {
+    "topic_id": "EDU010",
+    "title": "Weather and Arthritis",
+    "category": "symptom_management",
+    "content": "Comprehensive explanation of weather and arthritis. This content provides patients with essential information to understand their condition and treatment. Key points include understanding the underlying mechanisms, practical application in daily life, and evidence-based recommendations for management.",
+    "key_takeaways": [
+      "Key point 1 about Weather and Arthritis",
+      "Key point 2 about Weather and Arthritis",
+      "Key point 3 about Weather and Arthritis"
+    ],
+    "related_exercises": [
+      "EX001",
+      "EX002",
+      "EX003"
+    ]
+  }
+]
