@@ -1,417 +1,514 @@
 # streamlit_app.py
-"""Arthritis GPT Clone with Fixed Design, Alignment, and Runtime Error Handling."""
+"""
+KneeDoc AI — Multi-Section Web App Layout (Navbar, Hero, Feature Cards, KPIs, Exercise Plan, Coach Chat, FAQ)
+Single-file build that preserves your existing RAG + DataLoader logic.
+
+Requirements:
+- data_loader.py must define KneeArthritisDataLoader with .load_all(), .exercises, .faqs
+- rag_model.py must define KneeArthritisRAG with:
+    - extract_patient_info(text) -> dict
+    - retrieve_context(query, profile) -> dict
+    - create_exercise_plan(profile, ctx) -> dict
+    - generate_response(user_text, profile, ctx, history) -> str
+"""
 
 import streamlit as st
 from datetime import datetime
 import time
-# Assuming 'data_loader' and 'rag_model' are available and correct
+
+# Keep your current functionality
 from data_loader import KneeArthritisDataLoader
 from rag_model import KneeArthritisRAG
 
-
-# --------------------------------------------------------
+# ---------------------------------------------------------
 # PAGE CONFIG
-# --------------------------------------------------------
+# ---------------------------------------------------------
 st.set_page_config(
     page_title="KneeDoc AI",
     page_icon="🦵",
-    layout="wide" 
+    layout="wide"
 )
 
-
-# --------------------------------------------------------
-# ARTHRITIS GPT CLONE CSS (Perfected Alignment)
-# --------------------------------------------------------
+# ---------------------------------------------------------
+# CSS (Tailwind-like design tokens + components)
+# ---------------------------------------------------------
 st.markdown("""
 <style>
-/* Base Streamlit Overrides */
-#MainMenu, footer {visibility: hidden;}
-.stApp {background-color: #f0f2f6;} 
-
-/* Main Content Wrapper - Fixes top spacing and ensures full width */
-.block-container {
-    padding-top: 60px !important; 
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-    max-width: 100%;
+/* Design Tokens */
+:root {
+  --bg: #f5f7fb;         /* page bg */
+  --panel: #ffffff;      /* card/panel */
+  --text: #121826;       /* primary text */
+  --muted: #667085;      /* secondary text */
+  --border: #e5e7eb;     /* lines */
+  --brand1: #667eea;     /* gradient start */
+  --brand2: #764ba2;     /* gradient end */
+  --success: #16a34a;
+  --warning: #f59e0b;
+  --info: #0ea5e9;
 }
 
-/* Fixed Top Navigation Bar - Clean, full width */
-.top-nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 60px;
-    background: linear-gradient(135deg, #5c6bc0, #7986cb); 
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 1.5rem;
-    z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-.logo {font-size: 1.6rem; font-weight: 700; color: white;}
+/* Reset streamlit chrome */
+#MainMenu, header, footer { visibility: hidden; }
 
+/* Page */
+.stApp { background: var(--bg); }
 
-/* Main Chat Container - Centered and sized for readability */
-.chat-container {
-    max-width: 800px; 
-    margin: 30px auto 100px auto; /* Increased bottom margin for fixed chat input */
-    padding: 1.5rem 1rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+/* Navbar */
+.navbar {
+  position: sticky; top: 0; z-index: 999;
+  width: 100%;
+  background: linear-gradient(135deg, var(--brand1), var(--brand2));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0,0,0,.15);
 }
+.nav-wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .75rem 1.25rem; max-width: 1200px; margin: 0 auto;
+}
+.brand { font-weight: 800; letter-spacing: .2px; display: flex; gap: .5rem; align-items: center; }
+.nav-links a {
+  color: #fff; opacity: .95; text-decoration: none; font-weight: 600; margin-left: 1rem;
+}
+.nav-links a:hover { opacity: 1; text-decoration: underline; }
+.nav-actions { display: flex; gap: .5rem; }
+.btn-ghost {
+  background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.25);
+  padding: .45rem .7rem; border-radius: 10px; font-weight: 600; cursor: pointer;
+}
+.btn-ghost:hover { background: rgba(255,255,255,.22); }
 
-/* Chat Input Bar - CRITICAL FIX: Ensure correct width under the centered container */
-.stChatInput {
-    position: fixed;
-    bottom: 0;
-    width: 800px; /* Matches max-width of chat-container for clean alignment */
-    left: 50%;
-    transform: translateX(-50%);
-    background: #f0f2f6; 
-    padding: 10px 0;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
-    z-index: 999;
+/* Hero */
+.hero {
+  max-width: 1200px; margin: 2.5rem auto 1.5rem; padding: 0 1.25rem;
+  display: grid; grid-template-columns: 1.15fr .85fr; gap: 2rem; align-items: center;
 }
-
-
-/* Message Structure - FINAL ALIGNMENT FIX */
-.message-container {
-    display: flex;
-    flex-direction: column; /* Stacks the bubble and timestamp */
-    margin: 1.5rem 0;
+.hero-left {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+  padding: 2rem; box-shadow: 0 8px 24px rgba(2,6,23,.06);
 }
-.message-bubble-row {
-    display: flex;
-    align-items: flex-start; /* Align bubble and avatar tops */
-    gap: 10px;
+.kicker { color: var(--brand1); font-weight: 800; letter-spacing: .1em; font-size: .8rem; text-transform: uppercase; }
+.h1 {
+  font-size: 2.2rem; font-weight: 900; line-height: 1.15; margin: .4rem 0 1rem;
+  background: linear-gradient(135deg, var(--brand1), var(--brand2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-
-/* User Message Specific Alignment */
-.message-user-container {
-    align-items: flex-end; /* Pushes everything to the right */
+.hero-sub { color: var(--muted); font-size: 1.05rem; }
+.hero-cta { display: flex; gap: .6rem; margin-top: 1.25rem; }
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand1), var(--brand2)); color: #fff; border: none;
+  padding: .8rem 1rem; border-radius: 12px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 8px 20px rgba(102,126,234,.28);
 }
-.message-user-bubble-row {
-    justify-content: flex-end;
-}
-.message-user-timestamp {
-    text-align: right;
-    padding-right: 46px; /* Aligns with the end of the bubble */
+.btn-primary:hover { transform: translateY(-1px); }
+.btn-outline {
+  background: #fff; border: 1px solid var(--border); color: var(--text);
+  padding: .8rem 1rem; border-radius: 12px; font-weight: 700; cursor: pointer;
 }
 
-/* Assistant Message Specific Alignment */
-.message-assistant-container {
-    align-items: flex-start; /* Pushes everything to the left */
+/* Tiles / cards */
+.section { max-width: 1200px; margin: 1rem auto; padding: 0 1.25rem; }
+.section-title { font-size: 1.4rem; font-weight: 800; margin: .3rem 0 1rem; color: var(--text); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1rem;
+  box-shadow: 0 6px 20px rgba(2,6,23,.05);
 }
-.message-assistant-timestamp {
-    text-align: left;
-    margin-left: 46px; /* Aligns with the start of the bubble */
-}
+.card h4 { margin: 0 0 .35rem; font-weight: 800; color: var(--text); }
+.card p { margin: 0; color: var(--muted); }
 
+/* KPI */
+.kpi {
+  display: flex; gap: .75rem; align-items: center;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1rem; box-shadow: 0 4px 14px rgba(2,6,23,.05);
+}
+.kpi .badge { font-size: .8rem; color: #fff; padding: .15rem .5rem; border-radius: 999px; }
+.badge-success { background: var(--success); } .badge-warning { background: var(--warning); } .badge-info { background: var(--info); }
+.kpi .value { font-size: 1.6rem; font-weight: 900; color: var(--text); }
+.kpi .label { color: var(--muted); font-size: .95rem; }
 
-.avatar {
-    width: 36px; height: 36px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; flex-shrink: 0; color: white;
-}
-.avatar-user {background: linear-gradient(135deg, #5c6bc0, #7986cb);}
-.avatar-assistant {background: linear-gradient(135deg, #4CAF50, #81c784);}
+/* Plan cards */
+.plan-item { border: 1px dashed var(--border); border-radius: 12px; padding: .9rem; }
+.meta { color: var(--muted); font-size: .9rem; }
 
-.message-content {
-    max-width: 75%; 
-    padding: 1rem 1.3rem; 
-    border-radius: 20px; 
-    font-size: 1rem; line-height: 1.5;
-    word-break: break-word; 
-    white-space: pre-wrap; /* Keeps newlines/formatting */
+/* Coach chat mini-panel */
+.chat-panel {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1rem; box-shadow: 0 8px 24px rgba(2,6,23,.06);
 }
-.message-user-bubble-row .message-content {
-    background: linear-gradient(135deg, #5c6bc0, #7986cb);
-    color: white;
-    border-top-right-radius: 4px;
+.msg { display: flex; gap: .6rem; margin: .8rem 0; }
+.bubble {
+  background: #f7f8fa; border: 1px solid var(--border); color: var(--text);
+  padding: .65rem .8rem; border-radius: 12px; max-width: 80%;
 }
-.message-assistant-bubble-row .message-content {
-    background: #eef1f6; 
-    color: #333;
-    border-top-left-radius: 4px;
-}
+.bubble.me { background: linear-gradient(135deg, var(--brand1), var(--brand2)); color: #fff; border: none; }
+.time { font-size: .72rem; color: var(--muted); margin-left: auto; }
 
-.timestamp {
-    font-size: 0.7rem;
-    color: #999;
-    margin-top: 5px;
-}
+/* Typing dots */
+.typing { display:flex; gap:4px; align-items:center; padding: .4rem 0; }
+.dot { width:8px; height:8px; border-radius:50%; background:#bbb; animation: blink 1.2s infinite; }
+.dot:nth-child(2){animation-delay:.2s;} .dot:nth-child(3){animation-delay:.4s;}
+@keyframes blink { 0%,80%,100%{opacity:0;} 40%{opacity:1;} }
 
-/* Sidebar Styling - Ensure it clears the top nav */
-.stSidebar {
-    padding-top: 60px; 
-    background-color: white !important; 
-    box-shadow: 2px 0 8px rgba(0,0,0,0.05);
-}
-.stButton>button {
-    background: linear-gradient(135deg, #5c6bc0, #7986cb); 
-    color: white; border: none; padding: 0.7rem 1.5rem;
-    border-radius: 8px; font-weight: 600; font-size: 0.95rem;
-    cursor: pointer; width: 100%; transition: all 0.3s;
-}
-.stButton>button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(92, 107, 192, 0.3);
-}
+/* FAQ */
+.details { border: 1px solid var(--border); border-radius: 12px; padding: .8rem 1rem; background: var(--panel); }
+.details summary { cursor: pointer; font-weight: 800; color: var(--text); }
 
-/* Error box styling to make it look less intrusive */
-.stAlert {
-    position: fixed;
-    bottom: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 800px;
-    z-index: 1000;
+/* Footer */
+.footer {
+  margin: 2rem 0 0; padding: 1.2rem;
+  background: #0f172a; color: #e5e7eb;
 }
-
-/* Typing Indicator (Same as previous fix) */
-.typing-indicator {display: flex; gap: 6px; align-items: center; margin-left: 46px; margin-top: 10px;}
-.typing-dot {width: 8px; height: 8px; border-radius: 50%; background: #aaa; animation: blink 1.2s infinite;}
-.typing-dot:nth-child(2) {animation-delay: 0.2s;}
-.typing-dot:nth-child(3) {animation-delay: 0.4s;}
-@keyframes blink {0%, 80%, 100% {opacity: 0;} 40% {opacity: 1;}}
+.footer .inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
 </style>
 """, unsafe_allow_html=True)
 
-
-# --------------------------------------------------------
-# SESSION STATE (No Change)
-# --------------------------------------------------------
+# ---------------------------------------------------------
+# Session State
+# ---------------------------------------------------------
 defaults = {
+    "rag_initialized": False,
     "messages": [],
     "patient_profile": None,
     "current_plan": None,
-    "exercise_progress": {},
-    "session_start": datetime.now(),
-    "rag_initialized": False,
-    "user_name": None,
+    "settings_open": False
 }
 for k, v in defaults.items():
     st.session_state.setdefault(k, v)
 
-
-# --------------------------------------------------------
-# DATA LOADING & CACHING (Integration Unchanged)
-# --------------------------------------------------------
+# ---------------------------------------------------------
+# Cached loaders (underscore trick for hashing)
+# ---------------------------------------------------------
 @st.cache_resource
 def load_data():
-    """Loads exercise data."""
     loader = KneeArthritisDataLoader(data_dir="data")
     loader.load_all()
     return loader
 
-
 @st.cache_resource
-def initialize_rag(_loader, api_key):
-    """Initializes the RAG model."""
+def init_rag(_loader, api_key):
     return KneeArthritisRAG(_loader, api_key)
 
-
-# --------------------------------------------------------
-# TOP NAV BAR
-# --------------------------------------------------------
+# ---------------------------------------------------------
+# Navbar
+# ---------------------------------------------------------
 st.markdown("""
-<div class="top-nav">
-    <div class="logo">🦵 KneeDoc AI</div>
+<div class="navbar">
+  <div class="nav-wrap">
+    <div class="brand">🦵 KneeDoc AI</div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#plan">Exercise Plan</a>
+      <a href="#coach">Coach</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-ghost" onclick="window.parent.postMessage({type:'toggle_settings'}, '*')">⚙️ Settings</button>
+    </div>
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
+# Settings Drawer toggle JS (uses query param to persist)
+st.markdown("""
+<script>
+window.addEventListener('message', (ev) => {
+  try {
+    if (!ev.data || !ev.data.type) return;
+    if (ev.data.type === 'toggle_settings') {
+      const qp = new URLSearchParams(window.location.search);
+      const s = qp.get('settings') === '1' ? '0' : '1';
+      qp.set('settings', s);
+      window.location.search = qp.toString();
+    }
+  } catch(e) {}
+});
+</script>
+""", unsafe_allow_html=True)
 
-# --------------------------------------------------------
-# SIDEBAR
-# --------------------------------------------------------
-with st.sidebar:
-    st.markdown("### ⚙️ Settings")
+# Sync settings drawer state via query param
+qp = st.experimental_get_query_params()
+st.session_state.settings_open = qp.get("settings", ["0"])[0] == "1"
 
-    api_key = st.text_input("🔑 OpenAI API Key", type="password", placeholder="sk-...", key="api_key_input")
-    
-    if st.session_state.get('api_key_input'):
-        st.success("✅ API Key configured")
-        if not st.session_state.rag_initialized:
-            with st.spinner("Loading exercise database..."):
-                try:
-                    loader = load_data()
-                    # The rag model is initialized only once, keeping your integration secure
-                    st.session_state.rag = initialize_rag(loader, st.session_state.api_key_input)
-                    st.session_state.rag_initialized = True
-                    st.success(f"✅ {len(loader.exercises)} exercises loaded")
-                except Exception as e:
-                    st.error(f"❌ Error loading data: {e}")
-    else:
-        st.info("👈 Enter your API key to start chatting")
+# ---------------------------------------------------------
+# Settings Drawer (overlay card)
+# ---------------------------------------------------------
+if st.session_state.settings_open:
+    with st.container():
+        st.markdown(
+            """
+            <div style="
+              position: fixed; top: 70px; right: 16px; z-index: 1001;
+              width: 360px; background: var(--panel); border: 1px solid var(--border);
+              border-radius: 16px; box-shadow: 0 20px 60px rgba(2,6,23,.18); padding: 1rem;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <h4 style="margin:0;">Settings</h4>
+                <span style="color:var(--muted); font-size:.9rem;">Close from navbar</span>
+              </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-    st.divider()
+        api_key = st.text_input("🔑 OpenAI API Key", type="password", placeholder="sk-...")
+        if api_key:
+            if not st.session_state.rag_initialized:
+                with st.spinner("Loading exercise database & initializing RAG..."):
+                    try:
+                        loader = load_data()
+                        st.session_state.rag = init_rag(loader, api_key)
+                        st.session_state.rag_initialized = True
+                        st.success(f"✅ {len(loader.exercises)} exercises loaded")
+                    except Exception as e:
+                        st.error(f"❌ Error: {e}")
+            else:
+                st.info("RAG is already initialized.")
+        else:
+            st.info("Enter your OpenAI API key to enable GPT-backed answers. (Your local RAG fallback may still respond.)")
 
-    st.markdown("### 🧑‍⚕️ Patient Profile")
-    if st.session_state.patient_profile:
-        prof = st.session_state.patient_profile
-        st.markdown(f"""
-        - **Name:** {st.session_state.user_name or 'User'}
-        - **Age:** {prof.get('age', 'N/A')}
-        - **Severity:** {prof.get('severity', 'N/A')}/4
-        - **Pain:** {prof.get('pain_level', 'N/A')}/10
-        """)
+        if st.session_state.patient_profile:
+            prof = st.session_state.patient_profile
+            st.caption(f"Profile: Age {prof.get('age','N/A')} • Severity {prof.get('severity','N/A')}/4 • Pain {prof.get('pain_level','N/A')}/10")
 
-    if st.button("🔄 New Session", use_container_width=True):
-        # Clear all session data except the initialized RAG model
-        for k in list(st.session_state.keys()):
-            if k not in ["rag", "rag_initialized", "api_key_input"]:
-                del st.session_state[k]
-        st.rerun()
+        colA, colB = st.columns(2)
+        with colA:
+            if st.button("🔄 New Session", use_container_width=True):
+                for k in list(st.session_state.keys()):
+                    if k not in ["rag", "rag_initialized"]:
+                        del st.session_state[k]
+                st.rerun()
+        with colB:
+            st.write("")  # spacer
 
+        st.markdown("</div>", unsafe_allow_html=True)
 
-# --------------------------------------------------------
-# MAIN CHAT AREA
-# --------------------------------------------------------
-st.markdown('<div class="chat-container">', unsafe_allow_html=True)
-
-if not st.session_state.get('api_key_input') or not st.session_state.rag_initialized:
-    # Initial landing page without API key
+# ---------------------------------------------------------
+# HERO
+# ---------------------------------------------------------
+st.markdown('<a id="home"></a>', unsafe_allow_html=True)
+with st.container():
     st.markdown("""
-    <div style="text-align:center; padding:4rem 2rem;">
-        <h1 style="font-size:3rem; 
-        background:linear-gradient(135deg, #5c6bc0, #7986cb);
-        -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
-        Welcome to KneeDoc AI</h1>
-        <p style="color:#666;font-size:1.1rem; margin-top:10px;">Your Personal AI Exercise Coach for Knee Arthritis</p>
+    <div class="hero">
+      <div class="hero-left">
+        <div class="kicker">Personalized Rehab</div>
+        <div class="h1">Build safer, smarter knee routines with AI guidance.</div>
+        <div class="hero-sub">Evidence-based exercises, tailored progress, and real-time coaching—designed for knee arthritis relief and long-term mobility.</div>
+        <div class="hero-cta">
+          <button class="btn-primary" onclick="window.location.hash='#coach'">Start Assessment</button>
+          <button class="btn-outline" onclick="window.location.hash='#features'">Explore Features</button>
+        </div>
+      </div>
+      <div style="background: var(--panel); border:1px solid var(--border); border-radius:16px; padding:1rem; box-shadow: 0 8px 24px rgba(2,6,23,.06);">
+        <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?q=80&w=1600&auto=format&fit=crop" style="width:100%; border-radius:12px;" />
+        <div style="margin-top:.6rem; color:var(--muted); font-size:.9rem;">Daily mobility boosters • Low-impact strength • Step-by-step guidance</div>
+      </div>
     </div>
     """, unsafe_allow_html=True)
-    st.info("👈 Please enter your OpenAI API key in the sidebar to begin!")
-else:
-    # Initialize first assistant message if starting new
-    if not st.session_state.messages:
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": (
-                "👋 **Hi! I'm your KneeDoc AI Coach.**\n\n"
-                "Please share some details to create your personalized plan:\n"
-                "- Your name and age\n"
-                "- Your general knee condition (e.g., mild arthritis, recovering from surgery)\n"
-                "- Your pain level (1-10)\n\n"
-                "*Example:* 'I'm Sarah, 65, mild arthritis, pain when climbing stairs (5/10).'"
-            ),
-            "time": datetime.now().strftime("%I:%M %p")
-        })
 
-    # Display all messages
-    for msg in st.session_state.messages:
-        role = msg["role"]
-        avatar = "👤" if role == "user" else "🤖"
-        
-        # FINAL FIX: Use a single HTML block with correct class names for styling
-        if role == "user":
-            message_html = f"""
-            <div class="message-container message-user-container">
-                <div class="message-bubble-row message-user-bubble-row">
-                    <div class="message-content">{msg['content']}</div>
-                    <div class="avatar avatar-{role}">{avatar}</div>
-                </div>
-                <div class="timestamp message-user-timestamp">{msg['time']}</div>
-            </div>
-            """
-        else:
-             message_html = f"""
-            <div class="message-container message-assistant-container">
-                <div class="message-bubble-row">
-                    <div class="avatar avatar-{role}">{avatar}</div>
-                    <div class="message-content">{msg['content']}</div>
-                </div>
-                <div class="timestamp message-assistant-timestamp">{msg['time']}</div>
-            </div>
-            """
-        st.markdown(message_html, unsafe_allow_html=True)
-
-    # Chat Input
-    user_input = st.chat_input("Type your message here...", key="chat_input")
-
-    # CRITICAL ERROR FIX: Only process if user_input is a non-empty string
-    if user_input:
-        # 1. Add user message
-        st.session_state.messages.append({
-            "role": "user",
-            "content": user_input,
-            "time": datetime.now().strftime("%I:%M %p")
-        })
-        # Clear the input box to prevent repeated submissions on re-run
-        st.session_state.chat_input = "" 
-        st.rerun() 
-
-# RAG Processing occurs AFTER the rerun triggered by user input, 
-# ensuring the user message is displayed and st.session_state.messages[-1] is the user's message.
-if st.session_state.rag_initialized and st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
-    
-    # Use the content from the last message in state
-    current_user_input = st.session_state.messages[-1]["content"]
-
-    # Display typing indicator while processing
-    typing_placeholder = st.empty()
-    with typing_placeholder.container():
+# ---------------------------------------------------------
+# FEATURES
+# ---------------------------------------------------------
+st.markdown('<a id="features"></a>', unsafe_allow_html=True)
+with st.container():
+    st.markdown('<div class="section-title">Features</div>', unsafe_allow_html=True)
+    cols = st.columns(3)
+    with cols[0]:
         st.markdown("""
-        <div class="typing-indicator">
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
+        <div class="card">
+          <h4>Personalized Plans</h4>
+          <p>We adapt exercises to your profile—age, severity, pain tolerance, and goals.</p>
         </div>
         """, unsafe_allow_html=True)
-    time.sleep(1.0) 
+    with cols[1]:
+        st.markdown("""
+        <div class="card">
+          <h4>Progress Tracking</h4>
+          <p>Simple KPIs let you see improvements in comfort, strength, and range of motion.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with cols[2]:
+        st.markdown("""
+        <div class="card">
+          <h4>Coach Chat</h4>
+          <p>Ask questions and get step-by-step guidance—with safety tips built in.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-    # Response Generation Logic (Integration Unchanged)
-    try:
-        rag = st.session_state.rag
-        
-        if not st.session_state.patient_profile:
-            # Passes current_user_input (guaranteed non-empty string)
-            profile = rag.extract_patient_info(current_user_input)
-            st.session_state.patient_profile = profile
-            st.session_state.user_name = next(
-                (w.strip(",.") for w in current_user_input.split() if w[0].isupper()), "User"
-            )
-            ctx = rag.retrieve_context(current_user_input, profile)
-            full_reply = rag.generate_response(current_user_input, profile, ctx, st.session_state.messages)
+# KPIs
+with st.container():
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.markdown('<div class="kpi"><span class="badge badge-success">Live</span><div><div class="value">3–5</div><div class="label">Sessions per week</div></div></div>', unsafe_allow_html=True)
+    with c2:
+        st.markdown('<div class="kpi"><span class="badge badge-info">Avg</span><div><div class="value">12</div><div class="label">Reps per set</div></div></div>', unsafe_allow_html=True)
+    with c3:
+        st.markdown('<div class="kpi"><span class="badge badge-warning">Safe</span><div><div class="value">2</div><div class="label">Pain scale max</div></div></div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# EXERCISE PLAN (uses loader + RAG when available)
+# ---------------------------------------------------------
+st.markdown('<a id="plan"></a>', unsafe_allow_html=True)
+with st.container():
+    st.markdown('<div class="section-title">Your Exercise Plan</div>', unsafe_allow_html=True)
+
+    if not st.session_state.get("rag_initialized"):
+        st.info("Initialize in Settings to see a personalized plan. Showing sample exercises:")
+        # fallback to sample loader just for display
+        try:
+            tmp_loader = load_data()
+            sample_exs = tmp_loader.exercises[:3]
+        except Exception:
+            sample_exs = []
+    else:
+        # If plan not built yet, suggest building via Coach
+        if not st.session_state.get("current_plan"):
+            st.warning("No plan generated yet. Go to the Coach section to start your assessment.")
+            try:
+                sample_exs = load_data().exercises[:3]
+            except Exception:
+                sample_exs = []
         else:
-            ctx = rag.retrieve_context(current_user_input, st.session_state.patient_profile)
-            full_reply = rag.generate_response(current_user_input, st.session_state.patient_profile, ctx, st.session_state.messages)
+            sample_exs = st.session_state["current_plan"].get("exercises", [])[:6]
 
-        typing_placeholder.empty()
-        
-        # Live Streaming Display
-        reply_container = st.empty()
-        displayed_content = ""
-        current_time_str = datetime.now().strftime("%I:%M %p")
-        
-        # The streaming loop
-        for token in full_reply.split():
-            displayed_content += token + " "
-            
-            # HTML for streaming response display (Uses final assistant structure)
-            streaming_html = f"""
-            <div class="message-container message-assistant-container">
-                <div class="message-bubble-row">
-                    <div class="avatar avatar-assistant">🤖</div>
-                    <div class="message-content">{displayed_content.strip()}</div>
+    if sample_exs:
+        grid = st.columns(3)
+        for i, ex in enumerate(sample_exs):
+            with grid[i % 3]:
+                name = ex.get("name", "Exercise")
+                reps = ex.get("reps", "—")
+                diff = ex.get("difficulty", "—")
+                desc = ex.get("desc", "")
+                st.markdown(f"""
+                <div class="card plan-item">
+                  <h4>{name}</h4>
+                  <div class="meta">Reps: {reps} • Difficulty: {diff}/4</div>
+                  <p style="margin-top:.45rem;">{desc}</p>
                 </div>
-                <div class="timestamp message-assistant-timestamp">{current_time_str}</div>
-            </div>
-            """
-            reply_container.markdown(streaming_html, unsafe_allow_html=True)
-            time.sleep(0.03)
+                """, unsafe_allow_html=True)
 
-        # Save the final message to state
+# ---------------------------------------------------------
+# COACH (compact chat with streaming)
+# ---------------------------------------------------------
+st.markdown('<a id="coach"></a>', unsafe_allow_html=True)
+with st.container():
+    st.markdown('<div class="section-title">KneeDoc Coach</div>', unsafe_allow_html=True)
+    st.markdown('<div class="chat-panel">', unsafe_allow_html=True)
+
+    # Seed message when RAG is ready and chat empty
+    if st.session_state.rag_initialized and not st.session_state.messages:
         st.session_state.messages.append({
             "role": "assistant",
-            "content": full_reply,
-            "time": current_time_str
+            "content": "👋 I’m your AI coach. Tell me your age and describe your knee discomfort. I’ll suggest a safe starting plan.",
+            "time": datetime.now().strftime("%I:%M %p")
         })
-        # Final rerun to correctly place the final message in the history
-        st.rerun() 
 
-    except Exception as e:
-        typing_placeholder.empty()
-        # Display the error using st.error which often shows outside the main container
-        st.error(f"⚠️ An error occurred during response generation. Check your API key and model logic: {e}")
-            
-st.markdown("</div>", unsafe_allow_html=True)
+    # Render history
+    for m in st.session_state.messages:
+        role = m["role"]
+        bubble_class = "bubble me" if role == "user" else "bubble"
+        avatar = "🧑" if role == "user" else "🤖"
+        st.markdown(
+            f'<div class="msg"><div>{avatar}</div><div class="{bubble_class}">{m["content"]}</div>'
+            f'<div class="time">{m["time"]}</div></div>',
+            unsafe_allow_html=True
+        )
+
+    # Input
+    user_text = st.text_input("Ask the coach a question or describe your condition:", key="coach_input")
+    send_col1, send_col2 = st.columns([0.12, 0.88])
+    with send_col1:
+        send = st.button("Send", use_container_width=True)
+    with send_col2:
+        st.caption("Tip: e.g., “I’m 64 with moderate pain when climbing stairs.”")
+
+    if send and user_text.strip():
+        st.session_state.messages.append({
+            "role": "user",
+            "content": user_text.strip(),
+            "time": datetime.now().strftime("%I:%M %p")
+        })
+
+        # Typing indicator
+        ph = st.empty()
+        with ph.container():
+            st.markdown('<div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>', unsafe_allow_html=True)
+        time.sleep(0.8)
+
+        try:
+            if not st.session_state.get("rag_initialized"):
+                # Not initialized: graceful note
+                ph.empty()
+                reply = "Please open ⚙️ Settings and add your OpenAI key to enable personalized guidance."
+            else:
+                rag = st.session_state.rag
+                if not st.session_state.get("patient_profile"):
+                    profile = rag.extract_patient_info(user_text)
+                    st.session_state.patient_profile = profile
+                    ctx = rag.retrieve_context(user_text, profile)
+                    st.session_state.current_plan = rag.create_exercise_plan(profile, ctx)
+                    reply = rag.generate_response(user_text, profile, ctx, st.session_state.messages)
+                else:
+                    ctx = rag.retrieve_context(user_text, st.session_state.patient_profile)
+                    reply = rag.generate_response(user_text, st.session_state.patient_profile, ctx, st.session_state.messages)
+
+            # streaming the reply
+            ph.empty()
+            live = st.empty()
+            showed = ""
+            for tk in reply.split():
+                showed += tk + " "
+                live.markdown(f'<div class="msg"><div>🤖</div><div class="bubble">{showed.strip()}</div><div class="time">{datetime.now().strftime("%I:%M %p")}</div></div>', unsafe_allow_html=True)
+                time.sleep(0.02)
+
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": reply,
+                "time": datetime.now().strftime("%I:%M %p")
+            })
+
+            # Clear input after sending
+            st.session_state.coach_input = ""
+
+        except Exception as e:
+            ph.empty()
+            st.error(f"⚠️ {e}")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# FAQ
+# ---------------------------------------------------------
+st.markdown('<a id="faq"></a>', unsafe_allow_html=True)
+with st.container():
+    st.markdown('<div class="section-title">Frequently Asked Questions</div>', unsafe_allow_html=True)
+
+    # Try to use loader FAQs
+    faqs = []
+    try:
+        faqs = load_data().faqs
+    except Exception:
+        pass
+
+    if faqs:
+        for item in faqs[:6]:
+            q = item.get("q", "Question")
+            a = item.get("a", "Answer")
+            st.markdown(f'<div class="details"><summary>{q}</summary><div style="margin-top:.6rem; color:var(--muted);">{a}</div></div>', unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="details"><summary>How often should I do the exercises?</summary><div style="margin-top:.6rem; color:var(--muted);">Most people do well with 3–5 sessions per week. Adjust based on soreness and your provider’s advice.</div></div>', unsafe_allow_html=True)
+        st.markdown('<div class="details"><summary>What if I feel knee pain?</summary><div style="margin-top:.6rem; color:var(--muted);">Mild muscle soreness is okay; sharp joint pain or swelling means rest, reduce intensity, and consider icing for 10–15 minutes.</div></div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# FOOTER
+# ---------------------------------------------------------
+st.markdown("""
+<div class="footer">
+  <div class="inner">
+    <div>© 2025 KneeDoc AI</div>
+    <div style="opacity:.85;">Educational only — consult your clinician for personalized medical advice.</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
