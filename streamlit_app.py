@@ -18,11 +18,6 @@ h1, h2, h3, h4, h5, h6, label, p, span, div {
 }
 .stApp { background-color: transparent; }
 
-.sidebar .sidebar-content {
-  background-color: #000000;
-  color: white;
-}
-
 .login-container {
   display: flex;
   justify-content: center;
@@ -86,6 +81,13 @@ h1, h2, h3, h4, h5, h6, label, p, span, div {
   color: #8ab4f8;
   padding: 0.5rem;
 }
+.card {
+  background: rgba(0, 51, 102, 0.3);
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255,255,255,0.1);
+}
 @keyframes fadeIn {
   from {opacity: 0; transform: translateY(10px);}
   to {opacity: 1; transform: translateY(0);}
@@ -111,8 +113,13 @@ for k, v in defaults.items():
 def login_page():
     st.markdown('<div class="login-container">', unsafe_allow_html=True)
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
+    st.image(
+        "https://cdn.pixabay.com/photo/2017/03/14/15/55/exercise-2140760_1280.png",
+        width=280,
+        use_container_width=False,
+    )
     st.markdown("<h2>🦵 KneeDoc AI</h2>", unsafe_allow_html=True)
-    st.markdown("<p>Enter your OpenAI API key to continue</p>", unsafe_allow_html=True)
+    st.markdown("<p>Your Personal AI Exercise Coach for Knee Arthritis</p>", unsafe_allow_html=True)
 
     api_key = st.text_input("OpenAI API Key", type="password", placeholder="sk-...")
     if st.button("Continue", key="login_btn", use_container_width=True):
@@ -158,11 +165,9 @@ def page_home():
     st.markdown("<h1 style='text-align:center;'>Welcome to KneeDoc AI 🦵</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center;color:#ccc;'>AI-powered knee arthritis guidance and recovery support.</p>", unsafe_allow_html=True)
     st.image("https://cdn-icons-png.flaticon.com/512/2920/2920243.png", width=200)
-    st.write("""
-    - Personalized AI recommendations  
-    - Guided exercises  
-    - Real-time tracking and education
-    """)
+    st.markdown("<div class='card'>• Personalized AI recommendations</div>", unsafe_allow_html=True)
+    st.markdown("<div class='card'>• Guided exercises for recovery</div>", unsafe_allow_html=True)
+    st.markdown("<div class='card'>• Real-time tracking and insights</div>", unsafe_allow_html=True)
 
 
 def page_features():
@@ -173,17 +178,8 @@ def page_features():
         ("📈", "Progress Tracker", "Monitor recovery progress in real-time."),
         ("🔒", "Data Privacy", "Your data stays local and secure.")
     ]
-    cols = st.columns(2)
-    for i, (emoji, title, desc) in enumerate(features):
-        with cols[i % 2]:
-            st.markdown(f"""
-            <div style='background:rgba(0,51,102,0.3);border-radius:12px;
-                        padding:1rem;border:1px solid rgba(255,255,255,0.1);
-                        margin-bottom:0.8rem;'>
-                <h3>{emoji} {title}</h3>
-                <p style='color:#aaa;'>{desc}</p>
-            </div>
-            """, unsafe_allow_html=True)
+    for emoji, title, desc in features:
+        st.markdown(f"<div class='card'><h3>{emoji} {title}</h3><p style='color:#ccc;'>{desc}</p></div>", unsafe_allow_html=True)
 
 
 def page_exercise():
@@ -195,7 +191,6 @@ def page_exercise():
     st.json({"Example": "Sample plan generated from RAG context."})
 
 
-# === UPGRADED AI COACH PAGE ===
 def page_coach():
     st.title("🤖 AI Coach")
     if not st.session_state.rag_initialized:
@@ -209,16 +204,13 @@ def page_coach():
     chat_container = st.container()
     with chat_container:
         for msg in st.session_state.messages:
-            if msg["role"] == "assistant":
-                st.markdown(f"<div class='chat-bubble ai-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<div class='chat-bubble user-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
+            bubble_class = "ai-bubble" if msg["role"] == "assistant" else "user-bubble"
+            st.markdown(f"<div class='chat-bubble {bubble_class}'>{msg['content']}</div>", unsafe_allow_html=True)
 
     user_input = st.chat_input("Type your message...")
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
         with st.spinner("KneeDoc AI is thinking..."):
-            # Simulated typing effect
             typing_placeholder = st.empty()
             typing_placeholder.markdown("<div class='typing'>KneeDoc is typing...</div>", unsafe_allow_html=True)
             time.sleep(1.2)
