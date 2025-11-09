@@ -1,126 +1,142 @@
-"""Main Streamlit App — KneeDoc AI (Multi-Page with Login & Navigation)"""
+"""RAG model with conversational intake and lightweight mode (no ChromaDB)."""
 
-import streamlit as st
+import json
+from typing import List, Dict
 from datetime import datetime
-from data_loader import KneeArthritisDataLoader
-from rag_model import KneeArthritisRAG
+from openai import OpenAI
+from sentence_transformers import SentenceTransformer
+import streamlit as st
 
-# ---------------------------------------------------------------------
-# Streamlit Config
-# ---------------------------------------------------------------------
-st.set_page_config(
-    page_title="KneeDoc AI",
-    page_icon="🦵",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
-# ---------------------------------------------------------------------
-# Global Styling (dark blue + white text)
-# ---------------------------------------------------------------------
-st.markdown("""
-<style>
-.stApp {
-    background: linear-gradient(180deg, #000000 0%, #001a33 100%) !important;
-    color: white !important;
-}
-header, footer {visibility: hidden;}
-h1, h2, h3, h4, h5, h6, p, div, label, span {
-    color: white !important;
-}
-.stButton>button {
-    background: linear-gradient(135deg, #0077ff, #33ccff);
-    color: white;
-    border-radius: 10px;
-    border: none;
-    padding: 0.8rem 1.2rem;
-    font-weight: 600;
-}
-.stButton>button:hover {
-    background: linear-gradient(135deg, #0099ff, #33ddff);
-    transform: translateY(-2px);
-}
-input, textarea {
-    color: black !important;
-}
-</style>
-""", unsafe_allow_html=True)
+class KneeArthritisRAG:
+    """Lightweight RAG model for knee arthritis guidance."""
 
-# ---------------------------------------------------------------------
-# Initialize Session Variables
-# ---------------------------------------------------------------------
-if "api_key" not in st.session_state:
-    st.session_state.api_key = None
-if "rag" not in st.session_state:
-    st.session_state.rag = None
-if "rag_initialized" not in st.session_state:
-    st.session_state.rag_initialized = False
-if "session_start" not in st.session_state:
-    st.session_state.session_start = datetime.now()
+    def __init__(self, data_loader, openai_api_key: str):
+        self.loader = data_loader
+        self.openai_client = OpenAI(api_key=openai_api_key)
+        self.model_name = "gpt-4o-mini"
 
-# ---------------------------------------------------------------------
-# Helper: Load RAG
-# ---------------------------------------------------------------------
-@st.cache_resource
-def init_rag(api_key):
-    loader = KneeArthritisDataLoader(data_dir="data")
-    loader.load_all()
-    rag = KneeArthritisRAG(loader, api_key)
-    return rag, loader
+        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+        st.info("✅ KneeDoc AI initialized in lightweight mode (no ChromaDB).")
 
-# ---------------------------------------------------------------------
-# Login Page
-# ---------------------------------------------------------------------
-def login_page():
-    st.markdown("<h1 style='text-align:center;'>🦵 Welcome to KneeDoc AI</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; color:#aad4ff;'>Your AI physiotherapy assistant for knee arthritis</p>", unsafe_allow_html=True)
-    
-    st.image("https://cdn.pixabay.com/photo/2016/11/18/15/03/exercise-1838416_960_720.jpg", use_column_width=True)
+        self.exercises_text = self._prepare_exercises()
+        self.education_text = self._prepare_education()
+        self.qa_text = self._prepare_qa()
 
-    with st.form("login_form"):
-        api_key = st.text_input("🔑 Enter your OpenAI API Key", type="password", placeholder="sk-...")
-        submitted = st.form_submit_button("Login")
+    def _prepare_exercises(self):
+        docs = []
+        for ex in getattr(self.loader, "exercises", []):
+            text = f"Exercise: {ex.get('name', 'Unknown')}. Category: {ex.get('category', 'General')}. "
+            text += f"Target muscles: {', '.join(ex.get('target_muscles', []))}. Difficulty: {ex.get('difficulty_level', 1)}/4. "
+            text += f"Instructions: {' '.join(ex.get('instructions', []))}. Primary benefit: {ex.get('primary_benefit', 'mobility improvement')}."
+            docs.append(text)
+        return docs
 
-        if submitted:
-            if api_key and api_key.startswith("sk-"):
-                with st.spinner("Initializing AI system..."):
-                    st.session_state.api_key = api_key
-                    st.session_state.rag, _ = init_rag(api_key)
-                    st.session_state.rag_initialized = True
-                st.success("✅ Login successful! Loading your dashboard...")
-                st.rerun()
-            else:
-                st.error("⚠️ Please enter a valid OpenAI API key (starts with sk-).")
+    def _prepare_education(self):
+        return [f"Topic: {edu.get('title', '')}. {edu.get('content', '')}" for edu in getattr(self.loader, "education", [])]
 
-# ---------------------------------------------------------------------
-# Sidebar Navigation
-# ---------------------------------------------------------------------
-def sidebar_nav():
-    st.sidebar.title("🦵 KneeDoc AI")
-    st.sidebar.success("✅ Logged in")
+    def _prepare_qa(self):
+        return [f"Q: {qa.get('question', '')} A: {qa.get('answer', '')}" for qa in getattr(self.loader, "qa_pairs", [])]
 
-    st.sidebar.markdown("### Navigation")
-    st.sidebar.page_link("pages/1_Home.py", label="🏠 Home")
-    st.sidebar.page_link("pages/2_Features.py", label="⚙️ Features")
-    st.sidebar.page_link("pages/3_Exercise_Plan.py", label="📋 Exercise Plan")
-    st.sidebar.page_link("pages/4_Coach.py", label="🤖 AI Coach")
+    def extract_patient_info(self, query: str) -> dict:
+        prompt = f"""
+Analyze this patient's message: "{query}"
+Return ONLY valid JSON with:
+- severity (1–4)
+- age (integer)
+- pain_level (0–10)
+- goals (list)
+- limitations (list)
+"""
+        try:
+            resp = self.openai_client.chat.completions.create(
+                model=self.model_name,
+                max_tokens=400,
+                temperature=0.3,
+                messages=[
+                    {"role": "system", "content": "Return valid JSON only."},
+                    {"role": "user", "content": prompt},
+                ],
+            )
+            txt = resp.choices[0].message.content.strip()
+            if txt.startswith("```"):
+                txt = txt.split("```")[1].replace("json", "").strip()
+            return json.loads(txt)
+        except Exception:
+            return {"severity": 3, "age": 65, "pain_level": 5,
+                    "goals": ["reduce pain", "improve mobility"], "limitations": ["stiffness"]}
 
-    st.sidebar.divider()
-    st.sidebar.markdown("### Session Info")
-    duration = (datetime.now() - st.session_state.session_start).seconds // 60
-    st.sidebar.write(f"🕒 Duration: {duration} min")
+    def retrieve_context(self, query: str, patient_info: dict):
+        combined = (
+            "\n".join(self.exercises_text[:5])
+            + "\n\n"
+            + "\n".join(self.education_text[:3])
+            + "\n\n"
+            + "\n".join(self.qa_text[:3])
+        )
+        return {"context_text": combined, "safety": getattr(self.loader, "safety", {})}
 
-    if st.sidebar.button("🔄 Logout"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.experimental_rerun()
+    def generate_response(self, query: str, patient_info: dict, context: dict, conversation_history: List[dict]) -> str:
+        system_prompt = f"""
+You are KneeDoc AI, an empathetic physiotherapy coach specialized in knee arthritis.
 
-# ---------------------------------------------------------------------
-# App Logic
-# ---------------------------------------------------------------------
-if not st.session_state.api_key:
-    login_page()
-else:
-    sidebar_nav()
-    st.markdown("<h2 style='text-align:center;'>Welcome back to KneeDoc AI 🦵</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;'>Use the sidebar to navigate between features.</p>", unsafe_allow_html=True)
+Only answer questions related to knee pain, arthritis, rehabilitation, mobility, or exercise safety.
+If user asks anything else (like coding or chess), respond:
+"I'm sorry, I can only provide guidance related to knee arthritis and physical exercises."
+
+Patient Info:
+- Age: {patient_info.get('age', 65)}
+- Severity: {patient_info.get('severity', 3)}
+- Pain: {patient_info.get('pain_level', 5)}/10
+- Goals: {', '.join(patient_info.get('goals', []))}
+"""
+        messages = [{"role": "system", "content": system_prompt}]
+        messages.extend(conversation_history[-6:])
+        messages.append({"role": "user", "content": f"{query}\n\nContext:\n{context.get('context_text', '')}"})
+
+        try:
+            resp = self.openai_client.chat.completions.create(
+                model=self.model_name, temperature=0.6, max_tokens=1000, messages=messages
+            )
+            return resp.choices[0].message.content.strip()
+        except Exception as e:
+            return f"⚠️ Error: {e}"
+
+    def conversational_intake(self, user_message: str):
+        if "intake_step" not in st.session_state:
+            st.session_state.intake_step = "ask_age"
+            st.session_state.patient_profile = {}
+
+        step = st.session_state.intake_step
+        profile = st.session_state.patient_profile
+
+        if step == "ask_age":
+            try:
+                age = int("".join([c for c in user_message if c.isdigit()]))
+                profile["age"] = age
+                st.session_state.intake_step = "ask_pain"
+                return "Got it 👍 Now, on a scale of 1–10, how much pain do you usually feel?", "ask_pain"
+            except:
+                return "How old are you?", "ask_age"
+
+        elif step == "ask_pain":
+            try:
+                pain = int("".join([c for c in user_message if c.isdigit()]))
+                profile["pain_level"] = pain
+                st.session_state.intake_step = "ask_problem"
+                return "Thanks! Could you briefly describe your knee problem?", "ask_problem"
+            except:
+                return "On a scale of 1–10, how severe is your pain?", "ask_pain"
+
+        elif step == "ask_problem":
+            profile["problem"] = user_message.strip()
+            st.session_state.intake_step = "ask_goal"
+            return "Understood. What’s your main goal — reduce pain, improve mobility, or strengthen your knees?", "ask_goal"
+
+        elif step == "ask_goal":
+            profile["goals"] = [user_message.strip()]
+            st.session_state.intake_step = "done"
+            return "Perfect 💪 I have everything I need. Let’s create your personalized plan!", "done"
+
+        else:
+            return "You're all set! You can now ask for exercise plans anytime.", "done"
