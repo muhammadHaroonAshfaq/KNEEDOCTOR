@@ -19,7 +19,7 @@ st.set_page_config(
 
 
 # --------------------------------------------------------
-# MODERN CSS (ChatGPT-like)
+# MODERN CHATGPT-LIKE CSS
 # --------------------------------------------------------
 st.markdown("""
 <style>
@@ -126,7 +126,7 @@ for k, v in defaults.items():
 
 
 # --------------------------------------------------------
-# DATA LOADING
+# DATA LOADING & CACHING FIX
 # --------------------------------------------------------
 @st.cache_resource
 def load_data():
@@ -136,19 +136,27 @@ def load_data():
 
 
 @st.cache_resource
-def initialize_rag(loader, api_key):
-    return KneeArthritisRAG(loader, api_key)
+def initialize_rag(_loader, api_key):  # 👈 FIXED: underscore avoids hash error
+    return KneeArthritisRAG(_loader, api_key)
 
 
 # --------------------------------------------------------
-# TOP NAV BAR
+# TOP NAV BAR WITH TOGGLE BUTTON
 # --------------------------------------------------------
-col1, col2 = st.columns([0.1, 0.9])
-with col1:
-    if st.button("🍔", key="toggle_sidebar", help="Toggle sidebar"):
-        st.session_state.sidebar_visible = not st.session_state.sidebar_visible
+st.markdown("""
+<div class="top-nav">
+    <div class="logo">🦵 KneeDoc AI</div>
+    <button class="toggle-btn" onClick="window.parent.postMessage({type: 'toggle_sidebar'}, '*')">🍔</button>
+</div>
+""", unsafe_allow_html=True)
 
-st.markdown('<div class="top-nav"><div class="logo">🦵 KneeDoc AI</div></div>', unsafe_allow_html=True)
+
+# --------------------------------------------------------
+# SIDEBAR TOGGLE HANDLER
+# --------------------------------------------------------
+toggle_event = st.experimental_get_query_params().get("toggle_sidebar")
+if toggle_event:
+    st.session_state.sidebar_visible = not st.session_state.sidebar_visible
 
 
 # --------------------------------------------------------
@@ -211,7 +219,6 @@ if not api_key or not st.session_state.rag_initialized:
     if st.button("🚀 Get Started", use_container_width=True):
         st.info("👈 Enter your OpenAI API key in the sidebar to begin!")
 else:
-    # Initial message
     if not st.session_state.messages:
         st.session_state.messages.append({
             "role": "assistant",
@@ -226,7 +233,6 @@ else:
             "time": datetime.now().strftime("%I:%M %p")
         })
 
-    # Display chat messages
     for msg in st.session_state.messages:
         role_class = "message-user" if msg["role"] == "user" else "message-assistant"
         avatar = "👤" if msg["role"] == "user" else "🤖"
@@ -237,7 +243,6 @@ else:
         <div class="timestamp">{msg['time']}</div>
         """, unsafe_allow_html=True)
 
-    # Chat input
     user_input = st.chat_input("Type your message here...")
 
     if user_input:
