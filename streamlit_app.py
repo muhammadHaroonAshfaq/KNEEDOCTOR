@@ -49,11 +49,13 @@ h1, h2, h3, h4, h5, h6 { color: #fff; }
 </style>
 """, unsafe_allow_html=True)
 
+
 # --- Initialize session state ---
 for key in ["api_key", "rag", "rag_initialized", "session_start"]:
     if key not in st.session_state:
         st.session_state[key] = None if "initialized" not in key else False
 st.session_state.session_start = st.session_state.session_start or datetime.now()
+
 
 # --- Login Page ---
 def login_page():
@@ -73,7 +75,7 @@ def login_page():
                 st.session_state.rag_initialized = True
             st.success("✅ Login successful! Redirecting...")
             st.markdown(
-                "<script>setTimeout(()=>{window.parent.location.reload()}, 1000)</script>",
+                "<script>setTimeout(()=>{window.parent.location.reload()}, 1200)</script>",
                 unsafe_allow_html=True
             )
             st.rerun()
@@ -81,6 +83,7 @@ def login_page():
             st.error("Please enter a valid OpenAI API key (starts with 'sk-').")
 
     st.markdown("</div></div>", unsafe_allow_html=True)
+
 
 # --- Route to pages after login ---
 if not st.session_state.api_key:
@@ -90,14 +93,17 @@ else:
     st.sidebar.success("Logged in successfully")
     st.sidebar.markdown("---")
     st.sidebar.markdown("**Navigation**")
-    st.sidebar.page_link("streamlit_app.py", label="Login", icon="🔑")
+
+    # Valid page links (no link to the main login file)
     st.sidebar.page_link("pages/1_Home.py", label="Home", icon="🏠")
     st.sidebar.page_link("pages/2_Features.py", label="Features", icon="⚙️")
     st.sidebar.page_link("pages/3_Exercise_Plan.py", label="Exercise Plan", icon="💪")
     st.sidebar.page_link("pages/4_Coach.py", label="AI Coach", icon="🤖")
     st.sidebar.page_link("pages/5_FAQ.py", label="FAQ", icon="❓")
+
     st.sidebar.markdown("---")
     st.sidebar.caption("Session started at: " + st.session_state.session_start.strftime("%I:%M %p"))
+
     st.markdown(
         "<h1 style='text-align:center;margin-top:3rem;'>Welcome to KneeDoc AI 🦵</h1>"
         "<p style='text-align:center;color:#aaa;'>Choose a section from the sidebar to begin.</p>",
