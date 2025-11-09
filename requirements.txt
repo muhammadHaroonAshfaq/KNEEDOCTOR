@@ -10,3 +10,4 @@ python-dotenv
 **File 2: `.python-version` (NEW FILE)**
 ```
 3.11
+
