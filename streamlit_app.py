@@ -1,5 +1,5 @@
 # streamlit_app.py
-"""KneeDoc AI — ChatGPT-style interface with live streaming replies, typing animation, and timestamps"""
+"""KneeDoc AI — ChatGPT-style interface with collapsible sidebar, live streaming, typing animation, and timestamps."""
 
 import streamlit as st
 from datetime import datetime
@@ -7,52 +7,106 @@ import time
 from data_loader import KneeArthritisDataLoader
 from rag_model import KneeArthritisRAG
 
+
 # --------------------------------------------------------
 # PAGE CONFIG
 # --------------------------------------------------------
 st.set_page_config(
     page_title="KneeDoc AI",
     page_icon="🦵",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
+
 # --------------------------------------------------------
-# MODERN STYLING
+# MODERN CSS (ChatGPT-like)
 # --------------------------------------------------------
 st.markdown("""
 <style>
 #MainMenu, header, footer {visibility: hidden;}
-.stApp, .main {background-color: #0d1117;}
-.chat-container {max-width:900px;margin:80px auto 120px auto;padding:0 2rem;}
-.top-nav {position:fixed;top:0;left:0;right:0;height:60px;background:linear-gradient(135deg,#1a1f35,#0d1117);
-display:flex;align-items:center;padding:0 2rem;z-index:1000;border-bottom:1px solid rgba(255,255,255,0.1);}
-.logo {font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,#667eea,#764ba2);
--webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.message-wrapper{display:flex;margin:1.5rem 0;}
+.stApp {background-color: #f0f2f6;}
+.main {background-color: #f0f2f6;}
+.top-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.logo {font-size: 1.4rem; font-weight: 700; color: white;}
+.toggle-btn {
+    background: none; border: none; color: white;
+    font-size: 1.5rem; cursor: pointer; margin-right: 1rem;
+}
+.chat-container {
+    max-width: 900px;
+    margin: 90px auto 120px auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.message-wrapper {display:flex; margin:1.5rem 0;}
 .message-user{justify-content:flex-end;}
 .message-assistant{justify-content:flex-start;}
-.avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-font-size:1.2rem;flex-shrink:0;margin:0 1rem;}
+.avatar{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.2rem;flex-shrink:0;margin:0 1rem;
+}
 .avatar-user{background:linear-gradient(135deg,#667eea,#764ba2);}
 .avatar-assistant{background:linear-gradient(135deg,#4CAF50,#45a049);}
-.message-content{max-width:70%;padding:1rem 1.3rem;border-radius:16px;font-size:1rem;line-height:1.5;}
-.message-user .message-content{background:linear-gradient(135deg,#667eea,#764ba2);color:white;
-border-bottom-right-radius:4px;}
-.message-assistant .message-content{background:rgba(255,255,255,0.05);color:#e6e8eb;
-border:1px solid rgba(255,255,255,0.1);border-bottom-left-radius:4px;}
+.message-content{
+    max-width:70%;padding:1rem 1.3rem;border-radius:16px;
+    font-size:1rem;line-height:1.5;
+}
+.message-user .message-content{
+    background:linear-gradient(135deg,#667eea,#764ba2);color:white;
+}
+.message-assistant .message-content{
+    background:#f7f8fa;color:#222;border:1px solid #e0e0e0;
+}
 .timestamp{font-size:0.75rem;color:#888;text-align:right;margin-top:4px;}
 .typing-indicator{display:flex;gap:4px;align-items:center;margin-left:60px;}
-.typing-dot{width:8px;height:8px;border-radius:50%;background:#888;animation:blink 1.2s infinite;}
+.typing-dot{
+    width:8px;height:8px;border-radius:50%;background:#aaa;
+    animation:blink 1.2s infinite;
+}
 .typing-dot:nth-child(2){animation-delay:0.2s;}
 .typing-dot:nth-child(3){animation-delay:0.4s;}
 @keyframes blink{0%,80%,100%{opacity:0;}40%{opacity:1;}}
-.stButton>button{background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;
-padding:0.8rem 2rem;border-radius:10px;font-weight:600;font-size:1rem;cursor:pointer;width:100%;
-transition:all 0.3s;}
-.stButton>button:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(102,126,234,0.4);}
+.stButton>button{
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:white;border:none;padding:0.8rem 2rem;
+    border-radius:10px;font-weight:600;font-size:1rem;
+    cursor:pointer;width:100%;transition:all 0.3s;
+}
+.stButton>button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(102,126,234,0.3);
+}
+.sidebar-custom {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 300px;
+    height: 100%;
+    background: white;
+    border-right: 1px solid #ddd;
+    padding: 1.5rem;
+    overflow-y: auto;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease-in-out;
+}
+.sidebar-hidden {
+    transform: translateX(-320px);
+}
 </style>
 """, unsafe_allow_html=True)
+
 
 # --------------------------------------------------------
 # SESSION STATE
@@ -64,13 +118,15 @@ defaults = {
     "exercise_progress": {},
     "session_start": datetime.now(),
     "rag_initialized": False,
-    "user_name": None
+    "user_name": None,
+    "sidebar_visible": True
 }
 for k, v in defaults.items():
     st.session_state.setdefault(k, v)
 
+
 # --------------------------------------------------------
-# LOADERS
+# DATA LOADING
 # --------------------------------------------------------
 @st.cache_resource
 def load_data():
@@ -78,52 +134,65 @@ def load_data():
     loader.load_all()
     return loader
 
+
 @st.cache_resource
 def initialize_rag(loader, api_key):
     return KneeArthritisRAG(loader, api_key)
 
+
 # --------------------------------------------------------
-# NAVBAR
+# TOP NAV BAR
 # --------------------------------------------------------
+col1, col2 = st.columns([0.1, 0.9])
+with col1:
+    if st.button("🍔", key="toggle_sidebar", help="Toggle sidebar"):
+        st.session_state.sidebar_visible = not st.session_state.sidebar_visible
+
 st.markdown('<div class="top-nav"><div class="logo">🦵 KneeDoc AI</div></div>', unsafe_allow_html=True)
 
+
 # --------------------------------------------------------
-# SIDEBAR
+# CUSTOM SIDEBAR
 # --------------------------------------------------------
-with st.sidebar:
-    st.markdown("### ⚙️ Settings")
+sidebar_class = "sidebar-custom" if st.session_state.sidebar_visible else "sidebar-custom sidebar-hidden"
+st.markdown(f'<div class="{sidebar_class}">', unsafe_allow_html=True)
 
-    api_key = st.text_input("OpenAI API Key", type="password", placeholder="sk-...")
-    if api_key:
-        st.success("✅ API Key configured")
-        if not st.session_state.rag_initialized:
-            with st.spinner("Loading exercise database..."):
-                try:
-                    loader = load_data()
-                    st.session_state.rag = initialize_rag(loader, api_key)
-                    st.session_state.rag_initialized = True
-                    st.success(f"✅ {len(loader.exercises)} exercises loaded")
-                except Exception as e:
-                    st.error(f"❌ Error loading data: {e}")
-    else:
-        st.info("👈 Enter your API key to get started.")
+st.markdown("### ⚙️ Settings")
 
-    st.divider()
+api_key = st.text_input("🔑 OpenAI API Key", type="password", placeholder="sk-...")
+if api_key:
+    st.success("✅ API Key configured")
+    if not st.session_state.rag_initialized:
+        with st.spinner("Loading exercise database..."):
+            try:
+                loader = load_data()
+                st.session_state.rag = initialize_rag(loader, api_key)
+                st.session_state.rag_initialized = True
+                st.success(f"✅ {len(loader.exercises)} exercises loaded")
+            except Exception as e:
+                st.error(f"❌ Error loading data: {e}")
+else:
+    st.info("👈 Enter your API key to start chatting")
 
-    if st.session_state.patient_profile:
-        prof = st.session_state.patient_profile
-        st.markdown(f"""
-        **👤 {st.session_state.user_name or 'User'}**
-        - Age: {prof.get('age', 'N/A')}  
-        - Severity: {prof.get('severity', 'N/A')}/4  
-        - Pain: {prof.get('pain_level', 'N/A')}/10
-        """)
+st.divider()
 
-    if st.button("🔄 New Session"):
-        for k in list(st.session_state.keys()):
-            if k not in ["rag", "rag_initialized"]:
-                del st.session_state[k]
-        st.rerun()
+if st.session_state.patient_profile:
+    prof = st.session_state.patient_profile
+    st.markdown(f"""
+    **👤 {st.session_state.user_name or 'User'}**
+    - Age: {prof.get('age', 'N/A')}  
+    - Severity: {prof.get('severity', 'N/A')}/4  
+    - Pain: {prof.get('pain_level', 'N/A')}/10
+    """)
+
+if st.button("🔄 New Session"):
+    for k in list(st.session_state.keys()):
+        if k not in ["rag", "rag_initialized"]:
+            del st.session_state[k]
+    st.rerun()
+
+st.markdown("</div>", unsafe_allow_html=True)
+
 
 # --------------------------------------------------------
 # MAIN CHAT AREA
@@ -133,18 +202,16 @@ st.markdown('<div class="chat-container">', unsafe_allow_html=True)
 if not api_key or not st.session_state.rag_initialized:
     st.markdown("""
     <div style="text-align:center; padding:6rem 2rem;">
-        <h1 style="font-size:3rem;background:linear-gradient(135deg,#667eea,#764ba2);
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+        <h1 style="font-size:3rem; background:linear-gradient(135deg,#667eea,#764ba2);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
         Welcome to KneeDoc AI</h1>
-        <p style="color:#9aa0b6;font-size:1.2rem;">Your Personal AI Exercise Coach for Knee Arthritis</p>
+        <p style="color:#666;font-size:1.2rem;">Your Personal AI Exercise Coach for Knee Arthritis</p>
     </div>
     """, unsafe_allow_html=True)
     if st.button("🚀 Get Started", use_container_width=True):
         st.info("👈 Enter your OpenAI API key in the sidebar to begin!")
 else:
-    # --------------------------------------------------------
-    # INITIAL MESSAGE
-    # --------------------------------------------------------
+    # Initial message
     if not st.session_state.messages:
         st.session_state.messages.append({
             "role": "assistant",
@@ -159,9 +226,7 @@ else:
             "time": datetime.now().strftime("%I:%M %p")
         })
 
-    # --------------------------------------------------------
-    # RENDER CHAT HISTORY
-    # --------------------------------------------------------
+    # Display chat messages
     for msg in st.session_state.messages:
         role_class = "message-user" if msg["role"] == "user" else "message-assistant"
         avatar = "👤" if msg["role"] == "user" else "🤖"
@@ -172,9 +237,7 @@ else:
         <div class="timestamp">{msg['time']}</div>
         """, unsafe_allow_html=True)
 
-    # --------------------------------------------------------
-    # USER INPUT + STREAMING REPLY
-    # --------------------------------------------------------
+    # Chat input
     user_input = st.chat_input("Type your message here...")
 
     if user_input:
@@ -184,7 +247,6 @@ else:
             "time": datetime.now().strftime("%I:%M %p")
         })
 
-        # Typing indicator
         typing_placeholder = st.empty()
         with typing_placeholder.container():
             st.markdown("""
@@ -212,7 +274,6 @@ else:
                 ctx = rag.retrieve_context(user_input, st.session_state.patient_profile)
                 full_reply = rag.generate_response(user_input, st.session_state.patient_profile, ctx, st.session_state.messages)
 
-            # Live streaming effect
             typing_placeholder.empty()
             reply_box = st.empty()
             displayed = ""
@@ -225,6 +286,7 @@ else:
                 </div>
                 """, unsafe_allow_html=True)
                 time.sleep(0.03)
+
             st.session_state.messages.append({
                 "role": "assistant",
                 "content": full_reply,
