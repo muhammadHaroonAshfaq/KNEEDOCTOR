@@ -17,9 +17,7 @@ st.markdown("""
   background: transparent !important;
   color: #ffffff !important;
 }
-h1, h2, h3, h4, h5, h6, label, p, span, div {
-  color: #ffffff !important;
-}
+h1, h2, h3, h4, h5, h6, label, p, span, div { color: #ffffff !important; }
 section[data-testid="stSidebar"] {
   background: rgba(0, 0, 20, 0.85) !important;
   color: white !important;
@@ -32,71 +30,6 @@ section[data-testid="stSidebar"] {
   margin-bottom: 1rem;
   border: 1px solid rgba(0,153,255,0.3);
   box-shadow: 0 0 8px rgba(0,153,255,0.2);
-}
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-}
-.login-card {
-  background: rgba(0,51,102,0.5);
-  padding: 3rem 3.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 25px rgba(0,153,255,0.4);
-  text-align: center;
-  max-width: 420px;
-  width: 90%;
-  animation: fadeIn 0.7s ease-in-out;
-}
-.login-card h2 {
-  background: linear-gradient(135deg, #0099ff, #33ccff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-size: 2rem;
-  font-weight: 700;
-}
-.gradient-btn {
-  background: linear-gradient(135deg, #0077ff, #33ccff);
-  color: white;
-  border: none;
-  padding: 0.8rem 2rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-.gradient-btn:hover {
-  box-shadow: 0 0 20px rgba(0,153,255,0.8);
-  transform: translateY(-2px);
-}
-
-/* Chat bubbles */
-.chat-bubble {
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 0.5rem;
-  max-width: 80%;
-  word-wrap: break-word;
-}
-.user-bubble {
-  background: linear-gradient(135deg, #0055aa, #0099ff);
-  align-self: flex-end;
-  color: white;
-  margin-left: auto;
-}
-.ai-bubble {
-  background: linear-gradient(135deg, #1a2233, #223a5f);
-  color: #e5e7eb;
-  align-self: flex-start;
-}
-.typing {
-  font-style: italic;
-  color: #8ab4f8;
-  padding: 0.5rem;
 }
 
 /* Floating Restart Chat Button */
@@ -122,10 +55,11 @@ section[data-testid="stSidebar"] {
   transform: scale(1.05);
 }
 
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(10px);}
-  to {opacity: 1; transform: translateY(0);}
-}
+/* Chat bubbles */
+.chat-bubble {padding: 1rem; border-radius: 12px; margin-bottom: 0.5rem; max-width: 80%; word-wrap: break-word;}
+.user-bubble {background: linear-gradient(135deg, #0055aa, #0099ff); align-self: flex-end; color: white; margin-left: auto;}
+.ai-bubble {background: linear-gradient(135deg, #1a2233, #223a5f); color: #e5e7eb; align-self: flex-start;}
+.typing {font-style: italic; color: #8ab4f8; padding: 0.5rem;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -136,23 +70,19 @@ for k, v in {
     "rag_initialized": False,
     "session_start": datetime.now(),
     "page": "Home",
-    "messages": []
+    "messages": [],
 }.items():
     st.session_state.setdefault(k, v)
 
 # === LOGIN PAGE ===
 def login_page():
-    st.markdown('<div class="login-container">', unsafe_allow_html=True)
-    st.markdown('<div class="login-card">', unsafe_allow_html=True)
-    st.image(
-        "https://cdn.pixabay.com/photo/2017/03/14/15/55/exercise-2140760_1280.png",
-        width=260,
-    )
+    st.markdown('<div class="login-container" style="text-align:center;">', unsafe_allow_html=True)
+    st.image("https://cdn.pixabay.com/photo/2017/03/14/15/55/exercise-2140760_1280.png", width=260)
     st.markdown("<h2>🏋️ Knee Rehab Assistant</h2>", unsafe_allow_html=True)
     st.markdown("<p>Your AI-powered knee rehabilitation coach</p>", unsafe_allow_html=True)
 
     api_key = st.text_input("OpenAI API Key", type="password", placeholder="sk-...")
-    if st.button("Continue", key="login_btn", use_container_width=True):
+    if st.button("Continue"):
         if api_key.startswith("sk-"):
             st.session_state.api_key = api_key
             with st.spinner("Initializing your AI coach..."):
@@ -161,29 +91,25 @@ def login_page():
                 st.session_state.rag = KneeArthritisRAG(loader, api_key)
                 st.session_state.rag_initialized = True
             st.success("✅ Login successful! Redirecting...")
-            time.sleep(0.8)
-            st.session_state.page = "Home"
+            time.sleep(1)
+            st.session_state.page = "AI Coach"
             st.rerun()
         else:
-            st.error("Please enter a valid OpenAI API key (starts with 'sk-').")
-
-    st.markdown("</div></div>", unsafe_allow_html=True)
+            st.error("Please enter a valid API key starting with 'sk-'")
 
 # === SIDEBAR ===
 def sidebar_menu():
     with st.sidebar:
         st.title("🏋️ Knee Rehab Assistant")
         st.success("Logged in successfully")
-        st.markdown("---")
-        menu = st.radio("📍 Navigation", ["Home", "Features", "AI Coach", "FAQ"], index=["Home", "Features", "AI Coach", "FAQ"].index(st.session_state.page))
+        menu = st.radio("📍 Navigation", ["Home", "Features", "AI Coach", "FAQ"],
+                        index=["Home", "Features", "AI Coach", "FAQ"].index(st.session_state.page))
         st.session_state.page = menu
-        st.markdown("---")
         st.caption("Session started: " + st.session_state.session_start.strftime("%I:%M %p"))
 
 # === PAGES ===
 def page_home():
-    st.markdown("<h1 style='text-align:center;'>Welcome to Knee Rehab Assistant 🦵</h1>", unsafe_allow_html=True)
-    st.image("https://cdn-icons-png.flaticon.com/512/2920/2920243.png", width=200)
+    st.title("Welcome to Knee Rehab Assistant 🦵")
     st.markdown("<div class='card'>• Personalized AI guidance for knee health</div>", unsafe_allow_html=True)
     st.markdown("<div class='card'>• Step-by-step pain and recovery analysis</div>", unsafe_allow_html=True)
     st.markdown("<div class='card'>• Safe and guided exercises</div>", unsafe_allow_html=True)
@@ -193,30 +119,27 @@ def page_features():
     features = [
         ("🤖", "AI Rehab Coach", "Conversational assistant that guides you through knee recovery."),
         ("💪", "Custom Exercises", "Tailored workouts for your pain level and flexibility."),
-        ("📊", "Progress Tracker", "Monitor progress and improvements in mobility."),
+        ("📊", "Progress Tracker", "Monitor improvements in mobility."),
         ("🔒", "Data Privacy", "Your data stays local and secure.")
     ]
     for emoji, title, desc in features:
-        st.markdown(f"<div class='card'><h3>{emoji} {title}</h3><p style='color:#ccc;'>{desc}</p></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='card'><h3>{emoji} {title}</h3><p>{desc}</p></div>", unsafe_allow_html=True)
 
 def page_coach():
     st.title("🤖 AI Rehab Coach")
+
     if not st.session_state.rag_initialized:
         st.warning("Please log in again to use the AI Coach.")
         return
 
     rag = st.session_state.rag
 
-    # Floating Restart Chat Button
-    st.markdown("""
-        <button class="restart-btn" onclick="window.location.reload()">🔄 Restart Chat</button>
-    """, unsafe_allow_html=True)
+    # Floating Restart Button
+    st.markdown('<button class="restart-btn" onclick="window.location.reload()">🔄 Restart Chat</button>', unsafe_allow_html=True)
 
     # Initialize messages
-    if "messages" not in st.session_state or not st.session_state.messages:
-        st.session_state.messages = [
-            {"role": "assistant", "content": "👋 Hi! I'm your Knee Rehab Assistant. What's your name?"}
-        ]
+    if not st.session_state.messages:
+        st.session_state.messages = [{"role": "assistant", "content": "👋 Hi! What’s your name?"}]
 
     chat_container = st.container()
     with chat_container:
@@ -224,13 +147,18 @@ def page_coach():
             bubble_class = "ai-bubble" if msg["role"] == "assistant" else "user-bubble"
             st.markdown(f"<div class='chat-bubble {bubble_class}'>{msg['content']}</div>", unsafe_allow_html=True)
 
+    # Auto scroll
+    st.markdown("<script>window.scrollTo(0, document.body.scrollHeight);</script>", unsafe_allow_html=True)
+
     user_input = st.chat_input("Type your message...")
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
         st.rerun()
 
+    # After user reply
     if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
         user_message = st.session_state.messages[-1]["content"]
+
         with st.spinner("Knee Rehab Assistant is thinking..."):
             typing_placeholder = st.empty()
             typing_placeholder.markdown("<div class='typing'>Assistant is typing...</div>", unsafe_allow_html=True)
@@ -238,6 +166,7 @@ def page_coach():
             typing_placeholder.empty()
 
             ai_response, step = rag.conversational_intake(user_message)
+
             if step == "done":
                 profile = st.session_state.get("patient_profile", {})
                 context = rag.retrieve_context(user_message, profile)
@@ -249,7 +178,7 @@ def page_coach():
         for char in ai_response:
             ai_text += char
             bubble_placeholder.markdown(f"<div class='chat-bubble ai-bubble'>{ai_text}</div>", unsafe_allow_html=True)
-            time.sleep(0.02)  # 50–60 chars/sec
+            time.sleep(0.02)
         st.session_state.messages.append({"role": "assistant", "content": ai_response})
         st.rerun()
 
