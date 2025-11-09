@@ -6,18 +6,44 @@ from rag_model import KneeArthritisRAG
 
 st.set_page_config(page_title="KneeDoc AI", page_icon="🦵", layout="wide")
 
-# === GLOBAL DARK THEME ===
+# === COMPLETE DARK THEME FIX ===
 st.markdown("""
 <style>
-body {
-  background: linear-gradient(160deg, #000000 0%, #001a33 100%);
-  color: #ffffff;
+/* Global dark gradient background */
+.stApp {
+  background: linear-gradient(160deg, #000000 0%, #001a33 100%) !important;
+  color: #ffffff !important;
 }
+
+/* Fix Streamlit container backgrounds */
+[data-testid="stAppViewContainer"], [data-testid="stHeader"], [data-testid="stSidebar"], [data-testid="stVerticalBlock"], [data-testid="stVerticalBlockBorderWrapper"] {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+/* Text styling */
 h1, h2, h3, h4, h5, h6, label, p, span, div {
   color: #ffffff !important;
 }
-.stApp { background-color: transparent; }
 
+/* Sidebar */
+section[data-testid="stSidebar"] {
+  background: rgba(0, 0, 20, 0.85) !important;
+  color: white !important;
+  border-right: 1px solid rgba(0, 153, 255, 0.2);
+}
+
+/* Cards */
+.card {
+  background: rgba(0, 51, 102, 0.4);
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0,153,255,0.3);
+  box-shadow: 0 0 8px rgba(0,153,255,0.2);
+}
+
+/* Login styles */
 .login-container {
   display: flex;
   justify-content: center;
@@ -26,7 +52,7 @@ h1, h2, h3, h4, h5, h6, label, p, span, div {
   flex-direction: column;
 }
 .login-card {
-  background: rgba(0, 51, 102, 0.4);
+  background: rgba(0, 51, 102, 0.5);
   padding: 3rem 3.5rem;
   border-radius: 16px;
   box-shadow: 0 4px 25px rgba(0, 153, 255, 0.4);
@@ -58,6 +84,8 @@ h1, h2, h3, h4, h5, h6, label, p, span, div {
   box-shadow: 0 0 20px rgba(0, 153, 255, 0.8);
   transform: translateY(-2px);
 }
+
+/* Chat bubbles */
 .chat-bubble {
   padding: 1rem;
   border-radius: 12px;
@@ -72,7 +100,7 @@ h1, h2, h3, h4, h5, h6, label, p, span, div {
   margin-left: auto;
 }
 .ai-bubble {
-  background: linear-gradient(135deg, #111827, #1f2b3b);
+  background: linear-gradient(135deg, #1a2233, #223a5f);
   color: #e5e7eb;
   align-self: flex-start;
 }
@@ -81,13 +109,7 @@ h1, h2, h3, h4, h5, h6, label, p, span, div {
   color: #8ab4f8;
   padding: 0.5rem;
 }
-.card {
-  background: rgba(0, 51, 102, 0.3);
-  border-radius: 12px;
-  padding: 1.2rem;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(255,255,255,0.1);
-}
+
 @keyframes fadeIn {
   from {opacity: 0; transform: translateY(10px);}
   to {opacity: 1; transform: translateY(0);}
@@ -97,15 +119,14 @@ h1, h2, h3, h4, h5, h6, label, p, span, div {
 
 
 # === SESSION STATE ===
-defaults = {
+for k, v in {
     "api_key": None,
     "rag": None,
     "rag_initialized": False,
     "session_start": datetime.now(),
     "page": "Home",
     "messages": []
-}
-for k, v in defaults.items():
+}.items():
     st.session_state.setdefault(k, v)
 
 
@@ -115,7 +136,7 @@ def login_page():
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
     st.image(
         "https://cdn.pixabay.com/photo/2017/03/14/15/55/exercise-2140760_1280.png",
-        width=280,
+        width=260,
         use_container_width=False,
     )
     st.markdown("<h2>🦵 KneeDoc AI</h2>", unsafe_allow_html=True)
@@ -140,30 +161,23 @@ def login_page():
     st.markdown("</div></div>", unsafe_allow_html=True)
 
 
-# === SIDEBAR MENU ===
+# === SIDEBAR ===
 def sidebar_menu():
     with st.sidebar:
         st.title("🦵 KneeDoc AI")
         st.success("Logged in successfully")
         st.markdown("---")
-
         menu = st.radio("📍 Navigation", [
-            "Home",
-            "Features",
-            "Exercise Plan",
-            "AI Coach",
-            "FAQ"
+            "Home", "Features", "Exercise Plan", "AI Coach", "FAQ"
         ], index=["Home", "Features", "Exercise Plan", "AI Coach", "FAQ"].index(st.session_state.page))
-
         st.session_state.page = menu
         st.markdown("---")
         st.caption("Session started: " + st.session_state.session_start.strftime("%I:%M %p"))
 
 
-# === PAGE FUNCTIONS ===
+# === PAGE CONTENT ===
 def page_home():
     st.markdown("<h1 style='text-align:center;'>Welcome to KneeDoc AI 🦵</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;color:#ccc;'>AI-powered knee arthritis guidance and recovery support.</p>", unsafe_allow_html=True)
     st.image("https://cdn-icons-png.flaticon.com/512/2920/2920243.png", width=200)
     st.markdown("<div class='card'>• Personalized AI recommendations</div>", unsafe_allow_html=True)
     st.markdown("<div class='card'>• Guided exercises for recovery</div>", unsafe_allow_html=True)
@@ -215,11 +229,9 @@ def page_coach():
             typing_placeholder.markdown("<div class='typing'>KneeDoc is typing...</div>", unsafe_allow_html=True)
             time.sleep(1.2)
             typing_placeholder.empty()
-
             profile = rag.extract_patient_info(user_input)
             context = rag.retrieve_context(user_input, profile)
             response = rag.generate_response(user_input, profile, context, st.session_state.messages)
-
         st.session_state.messages.append({"role": "assistant", "content": response})
         st.rerun()
 
