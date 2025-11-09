@@ -1,5 +1,5 @@
 # streamlit_app.py
-"""Enhanced Streamlit app for Knee Arthritis Exercise Guide"""
+"""Modern ChatGPT-style interface for Knee Arthritis Exercise Guide"""
 
 import streamlit as st
 from datetime import datetime
@@ -9,181 +9,414 @@ from rag_model import KneeArthritisRAG
 
 # Page configuration
 st.set_page_config(
-    page_title="Knee Arthritis Exercise Guide",
+    page_title="KneeDoc AI",
     page_icon="🦵",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# Enhanced Custom CSS
+# Modern ChatGPT-style CSS
 st.markdown("""
 <style>
-    /* Main container */
+    /* Hide Streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Global styles */
+    .stApp {
+        background-color: #0d1117;
+    }
+    
     .main {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background-color: #0d1117;
+        padding: 0;
     }
     
-    /* Header styling */
-    .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 2rem;
-        border-radius: 15px;
-        text-align: center;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    /* Top Navigation Bar */
+    .top-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(135deg, #1a1f35 0%, #0d1117 100%);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        padding: 0 2rem;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
     
-    .main-header h1 {
-        color: white;
-        font-size: 2.5rem;
-        margin: 0;
+    .logo {
+        font-size: 1.5rem;
         font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     
-    .main-header p {
-        color: rgba(255,255,255,0.9);
-        font-size: 1.1rem;
-        margin-top: 0.5rem;
+    .nav-items {
+        margin-left: auto;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
     }
     
-    /* Chat messages */
-    .chat-message-user {
+    .nav-button {
+        background: rgba(255,255,255,0.1);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.2);
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+    }
+    
+    .nav-button:hover {
+        background: rgba(255,255,255,0.2);
+        border-color: #667eea;
+    }
+    
+    /* Chat Container */
+    .chat-container {
+        max-width: 900px;
+        margin: 80px auto 100px auto;
+        padding: 0 2rem;
+    }
+    
+    /* Welcome Hero Section */
+    .hero-section {
+        text-align: center;
+        padding: 4rem 2rem;
+        margin: 2rem 0;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        animation: fadeInUp 0.8s ease;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3rem;
+        color: #8b92a8;
+        margin-bottom: 3rem;
+        animation: fadeInUp 1s ease;
+    }
+    
+    .feature-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 3rem;
+    }
+    
+    .feature-card {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+        border-color: #667eea;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .feature-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feature-desc {
+        font-size: 0.9rem;
+        color: #8b92a8;
+    }
+    
+    /* Chat Messages */
+    .message-wrapper {
+        display: flex;
+        margin: 2rem 0;
+        animation: fadeInUp 0.5s ease;
+    }
+    
+    .message-user {
+        justify-content: flex-end;
+    }
+    
+    .message-assistant {
+        justify-content: flex-start;
+    }
+    
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin: 0 1rem;
+    }
+    
+    .avatar-user {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .avatar-assistant {
+        background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    }
+    
+    .message-content {
+        max-width: 70%;
+        padding: 1.2rem 1.5rem;
+        border-radius: 16px;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    .message-user .message-content {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 1.2rem;
-        border-radius: 15px;
-        margin: 1rem 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        border-left: 5px solid #764ba2;
+        border-bottom-right-radius: 4px;
     }
     
-    .chat-message-assistant {
-        background: white;
-        padding: 1.2rem;
-        border-radius: 15px;
-        margin: 1rem 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        border-left: 5px solid #4CAF50;
+    .message-assistant .message-content {
+        background: rgba(255,255,255,0.05);
+        color: #e6e8eb;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-bottom-left-radius: 4px;
     }
     
-    /* Profile card */
-    .profile-card {
-        background: white;
+    /* Input Container */
+    .input-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, #0d1117 0%, rgba(13, 17, 23, 0.95) 100%);
+        padding: 1.5rem 2rem 2rem 2rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        z-index: 999;
+    }
+    
+    .input-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+    }
+    
+    /* Sidebar styling */
+    .sidebar-content {
+        background: #161b22;
         padding: 1.5rem;
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin: 1rem 0;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255,255,255,0.1);
     }
     
-    .profile-card h3 {
-        color: #667eea;
-        margin-top: 0;
+    .sidebar-title {
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     
     .profile-item {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #f0f0f0;
+        background: rgba(255,255,255,0.05);
+        padding: 0.8rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        color: #8b92a8;
+        border: 1px solid rgba(255,255,255,0.1);
     }
     
-    .profile-item:last-child {
-        border-bottom: none;
+    .profile-label {
+        color: #667eea;
+        font-weight: 600;
+        margin-right: 0.5rem;
     }
     
-    /* Exercise plan */
-    .exercise-card {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    .progress-bar-container {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        height: 30px;
+        margin: 1rem 0;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .progress-bar-fill {
+        background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: width 0.5s ease;
+    }
+    
+    .exercise-item {
+        background: rgba(255,255,255,0.05);
         padding: 1rem;
         border-radius: 10px;
         margin: 0.5rem 0;
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.3s;
         cursor: pointer;
-        transition: transform 0.2s;
     }
     
-    .exercise-card:hover {
+    .exercise-item:hover {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
         transform: translateX(5px);
     }
     
     .exercise-completed {
-        background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        border-color: #4CAF50;
+        background: rgba(76, 175, 80, 0.1);
     }
     
-    /* Progress bar */
-    .progress-container {
-        background: #e0e0e0;
-        border-radius: 10px;
-        height: 25px;
-        margin: 1rem 0;
-        overflow: hidden;
-    }
-    
-    .progress-bar {
-        background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%);
-        height: 100%;
-        border-radius: 10px;
-        text-align: center;
-        line-height: 25px;
+    .exercise-title {
         color: white;
-        font-weight: bold;
-        transition: width 0.3s ease;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
     }
     
-    /* Welcome box */
-    .welcome-box {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .exercise-meta {
+        color: #8b92a8;
+        font-size: 0.85rem;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+    
+    .typing-indicator {
+        display: inline-flex;
+        gap: 4px;
+        padding: 1rem;
+    }
+    
+    .typing-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #667eea;
+        animation: pulse 1.4s infinite;
+    }
+    
+    .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    /* Custom Streamlit input styling */
+    .stTextInput > div > div > input {
+        background-color: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 12px;
         color: white;
-        padding: 2rem;
-        border-radius: 15px;
-        text-align: center;
-        margin: 2rem 0;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
     }
     
-    .welcome-box h2 {
-        color: white;
-        margin-top: 0;
+    .stTextInput > div > div > input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
     }
     
-    /* Buttons */
-    .stButton>button {
+    /* Button styling */
+    .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 8px;
+        padding: 0.8rem 2rem;
+        border-radius: 10px;
         font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
         transition: all 0.3s;
+        width: 100%;
     }
     
-    .stButton>button:hover {
+    .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
     }
     
     /* Info boxes */
-    .info-box {
-        background: #e3f2fd;
-        border-left: 4px solid #2196F3;
-        padding: 1rem;
-        border-radius: 8px;
+    .info-card {
+        background: rgba(33, 150, 243, 0.1);
+        border: 1px solid rgba(33, 150, 243, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
         margin: 1rem 0;
+        color: #e6e8eb;
     }
     
-    .success-box {
-        background: #e8f5e9;
-        border-left: 4px solid #4CAF50;
-        padding: 1rem;
-        border-radius: 8px;
+    .success-card {
+        background: rgba(76, 175, 80, 0.1);
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
         margin: 1rem 0;
+        color: #e6e8eb;
     }
     
-    .warning-box {
-        background: #fff3e0;
-        border-left: 4px solid #ff9800;
-        padding: 1rem;
-        border-radius: 8px;
+    .warning-card {
+        background: rgba(255, 152, 0, 0.1);
+        border: 1px solid rgba(255, 152, 0, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
         margin: 1rem 0;
+        color: #e6e8eb;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -201,269 +434,251 @@ if 'session_start' not in st.session_state:
     st.session_state.session_start = datetime.now()
 if 'rag_initialized' not in st.session_state:
     st.session_state.rag_initialized = False
-if 'conversation_stage' not in st.session_state:
-    st.session_state.conversation_stage = 'welcome'  # welcome, collecting_info, active
 if 'user_name' not in st.session_state:
     st.session_state.user_name = None
+if 'show_welcome' not in st.session_state:
+    st.session_state.show_welcome = True
 
 # Load data and initialize RAG (cached)
 @st.cache_resource
 def load_data():
-    """Load dataset"""
     loader = KneeArthritisDataLoader(data_dir="data")
     loader.load_all()
     return loader
 
 @st.cache_resource
 def initialize_rag(_loader, api_key):
-    """Initialize RAG model"""
     return KneeArthritisRAG(_loader, api_key)
 
-# Header
+# Top Navigation Bar
 st.markdown("""
-<div class="main-header">
-    <h1>🦵 Knee Arthritis Exercise Guide</h1>
-    <p>Your Personal AI Exercise Coach - Helping You Move Better, Feel Better</p>
+<div class="top-nav">
+    <div class="logo">🦵 KneeDoc AI</div>
+    <div class="nav-items">
+        <div class="nav-button">💬 Chat</div>
+        <div class="nav-button">📋 My Plan</div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
-    st.markdown("### ⚙️ Settings")
+    st.markdown('<div class="sidebar-title">⚙️ Settings</div>', unsafe_allow_html=True)
     
-    # API Key input
+    # API Key
     api_key = st.text_input(
         "OpenAI API Key",
         type="password",
-        help="Enter your OpenAI API key to get started"
+        help="Enter your OpenAI API key",
+        label_visibility="collapsed",
+        placeholder="Enter OpenAI API Key..."
     )
     
     if api_key:
-        st.markdown('<div class="success-box">✅ API Key configured</div>', unsafe_allow_html=True)
+        st.markdown('<div class="success-card">✅ API Key configured</div>', unsafe_allow_html=True)
         
-        # Initialize RAG only once
         if not st.session_state.rag_initialized:
-            with st.spinner("🔄 Loading exercise database..."):
+            with st.spinner("Loading..."):
                 try:
                     loader = load_data()
                     st.session_state.rag = initialize_rag(loader, api_key)
                     st.session_state.rag_initialized = True
-                    st.success(f"✅ Loaded {len(loader.exercises)} exercises")
                 except Exception as e:
                     st.error(f"Error: {e}")
     else:
-        st.markdown('<div class="info-box">ℹ️ Please enter your OpenAI API key to begin</div>', unsafe_allow_html=True)
+        st.markdown('<div class="info-card">ℹ️ Enter API key to start</div>', unsafe_allow_html=True)
     
-    st.divider()
+    st.markdown("---")
     
-    # Patient Profile
-    st.markdown("### 📊 Your Profile")
+    # Profile Section
     if st.session_state.patient_profile:
+        st.markdown('<div class="sidebar-title">📊 Your Profile</div>', unsafe_allow_html=True)
         profile = st.session_state.patient_profile
+        
         st.markdown(f"""
-        <div class="profile-card">
-            <div class="profile-item"><strong>Name:</strong> {st.session_state.user_name or 'Not provided'}</div>
-            <div class="profile-item"><strong>Age:</strong> {profile.get('age', 'N/A')}</div>
-            <div class="profile-item"><strong>Severity:</strong> {profile.get('severity', 'N/A')}/4</div>
-            <div class="profile-item"><strong>Pain Level:</strong> {profile.get('pain_level', 'N/A')}/10</div>
+        <div class="sidebar-content">
+            <div class="profile-item">
+                <span class="profile-label">Name:</span>
+                {st.session_state.user_name or 'Not set'}
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Age:</span>
+                {profile.get('age', 'N/A')} years
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Severity:</span>
+                {profile.get('severity', 'N/A')}/4
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Pain Level:</span>
+                {profile.get('pain_level', 'N/A')}/10
+            </div>
         </div>
         """, unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="info-box">👋 Start chatting to create your profile!</div>', unsafe_allow_html=True)
-    
-    st.divider()
     
     # Exercise Plan
-    st.markdown("### 📋 Exercise Plan")
     if st.session_state.current_plan and st.session_state.current_plan.get('exercises'):
+        st.markdown('<div class="sidebar-title">📋 Exercise Plan</div>', unsafe_allow_html=True)
+        
         exercises = st.session_state.current_plan['exercises']
         completed = sum(1 for ex in exercises if ex.get('completed', False))
         total = len(exercises)
+        progress = (completed / total * 100) if total > 0 else 0
         
-        # Progress bar
-        progress_percent = (completed / total * 100) if total > 0 else 0
         st.markdown(f"""
-        <div class="progress-container">
-            <div class="progress-bar" style="width: {progress_percent}%">
-                {completed}/{total}
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {progress}%">
+                {completed}/{total} Done
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # Exercise list
         for i, ex in enumerate(exercises, 1):
             completed_class = "exercise-completed" if ex.get('completed', False) else ""
             status = "✅" if ex.get('completed', False) else "⭕"
+            
             st.markdown(f"""
-            <div class="exercise-card {completed_class}">
-                {status} <strong>{i}. {ex['name']}</strong><br>
-                <small>Difficulty: {ex['difficulty']}/4 | {ex['reps']} reps</small>
+            <div class="exercise-item {completed_class}">
+                <div class="exercise-title">{status} {i}. {ex['name']}</div>
+                <div class="exercise-meta">Difficulty: {ex['difficulty']}/4 • {ex['reps']} reps</div>
             </div>
             """, unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="info-box">💡 Complete your profile to get your personalized plan</div>', unsafe_allow_html=True)
     
-    st.divider()
+    st.markdown("---")
     
-    # Session info
-    st.markdown("### ⏱️ Session Info")
+    # Session Info
+    st.markdown('<div class="sidebar-title">⏱️ Session</div>', unsafe_allow_html=True)
     duration = (datetime.now() - st.session_state.session_start).seconds // 60
-    st.write(f"⏰ Duration: {duration} min")
-    st.write(f"💬 Messages: {len(st.session_state.messages)}")
-    
-    if st.button("🔄 Reset Session", use_container_width=True):
-        for key in list(st.session_state.keys()):
-            if key != 'rag' and key != 'rag_initialized':
-                del st.session_state[key]
-        st.rerun()
-
-# Main content area
-if not api_key:
-    st.markdown("""
-    <div class="welcome-box">
-        <h2>👋 Welcome to Your Knee Arthritis Exercise Guide!</h2>
-        <p style="font-size: 1.1rem; margin: 1rem 0;">
-            I'm your personal AI exercise coach, here to help you manage knee arthritis through safe, effective exercises.
-        </p>
-        <p style="font-size: 1rem;">
-            <strong>To get started:</strong><br>
-            👈 Enter your OpenAI API key in the sidebar
-        </p>
-    </div>
-    
-    <div class="info-box">
-        <h3 style="margin-top:0;">🎯 What I Can Do For You:</h3>
-        <ul>
-            <li>Create personalized exercise plans based on your condition</li>
-            <li>Guide you through exercises step-by-step</li>
-            <li>Track your progress and adapt recommendations</li>
-            <li>Answer your questions about knee arthritis management</li>
-            <li>Provide safety guidance and modifications</li>
-        </ul>
-    </div>
-    
-    <div class="warning-box">
-        <strong>⚠️ Important Medical Disclaimer:</strong><br>
-        This tool provides educational information only. Always consult your healthcare provider before starting any exercise program.
+    st.markdown(f"""
+    <div class="sidebar-content">
+        <div class="profile-item">⏰ Duration: {duration} min</div>
+        <div class="profile-item">💬 Messages: {len(st.session_state.messages)}</div>
     </div>
     """, unsafe_allow_html=True)
     
-elif st.session_state.rag_initialized:
+    if st.button("🔄 New Session"):
+        for key in list(st.session_state.keys()):
+            if key not in ['rag', 'rag_initialized']:
+                del st.session_state[key]
+        st.rerun()
+
+# Main Chat Area
+st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+
+if not api_key or not st.session_state.rag_initialized:
+    # Hero Welcome Section
+    st.markdown("""
+    <div class="hero-section">
+        <h1 class="hero-title">Welcome to KneeDoc AI</h1>
+        <p class="hero-subtitle">Your Personal AI Exercise Coach for Knee Arthritis Management</p>
+    </div>
     
-    # Welcome message for new users
+    <div class="feature-cards">
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <div class="feature-title">Personalized Plans</div>
+            <div class="feature-desc">Get exercise plans tailored to your condition</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <div class="feature-title">Progress Tracking</div>
+            <div class="feature-desc">Monitor your improvement over time</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <div class="feature-title">AI Guidance</div>
+            <div class="feature-desc">Step-by-step exercise instructions</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⚕️</div>
+            <div class="feature-title">Safety First</div>
+            <div class="feature-desc">Evidence-based, safe recommendations</div>
+        </div>
+    </div>
+    
+    <div class="warning-card" style="margin-top: 3rem;">
+        <strong>⚠️ Medical Disclaimer:</strong> This is an educational tool. Always consult your healthcare provider before starting any exercise program.
+    </div>
+    """, unsafe_allow_html=True)
+
+else:
+    # Initial welcome message
     if len(st.session_state.messages) == 0:
-        welcome_message = """
-👋 **Hello! Welcome to your Knee Arthritis Exercise Coach!**
+        welcome = """👋 **Hello! I'm your KneeDoc AI Coach.**
 
-I'm here to help you manage your knee arthritis with personalized exercises. Let's start by getting to know you better.
+I'm here to create a personalized exercise program for your knee arthritis. Let's start by getting to know you!
 
-**Could you please tell me:**
-1. Your name
-2. Your age
-3. A brief description of your knee condition (pain level, symptoms, limitations)
+**Please tell me:**
+- Your name
+- Your age  
+- A brief description of your knee condition
 
-For example: *"Hi, I'm Sarah, 65 years old. I have moderate knee pain, especially when climbing stairs, and my knee sometimes swells up after walking."*
-        """
+*Example: "Hi, I'm Sarah, 65 years old. I have moderate knee pain when climbing stairs and occasional swelling."*"""
         
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": welcome_message
-        })
+        st.session_state.messages.append({"role": "assistant", "content": welcome})
     
-    # Display chat messages
+    # Display messages
     for message in st.session_state.messages:
         if message["role"] == "user":
             st.markdown(f"""
-            <div class="chat-message-user">
-                <strong>🗣️ You:</strong><br>
-                {message["content"]}
+            <div class="message-wrapper message-user">
+                <div class="message-content">{message["content"]}</div>
+                <div class="avatar avatar-user">👤</div>
             </div>
             """, unsafe_allow_html=True)
         else:
             st.markdown(f"""
-            <div class="chat-message-assistant">
-                <strong>🤖 Coach:</strong><br>
-                {message["content"]}
+            <div class="message-wrapper message-assistant">
+                <div class="avatar avatar-assistant">🤖</div>
+                <div class="message-content">{message["content"]}</div>
             </div>
             """, unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Fixed Input at Bottom
+if api_key and st.session_state.rag_initialized:
+    st.markdown('<div class="input-container">', unsafe_allow_html=True)
+    st.markdown('<div class="input-wrapper">', unsafe_allow_html=True)
     
-    # Chat input
-    user_input = st.chat_input("Type your message here...")
+    user_input = st.chat_input("Type your message...", key="chat_input")
     
     if user_input:
-        # Add user message
         st.session_state.messages.append({"role": "user", "content": user_input})
         
-        # Show thinking spinner
-        with st.spinner("🤔 Thinking..."):
+        with st.spinner(""):
             try:
-                # Extract patient info if first real message
                 if not st.session_state.patient_profile:
                     st.session_state.patient_profile = st.session_state.rag.extract_patient_info(user_input)
                     
-                    # Try to extract name from message
-                    if not st.session_state.user_name:
-                        # Simple name extraction (you can make this more sophisticated)
-                        words = user_input.split()
-                        if "I'm" in user_input or "I am" in user_input or "my name is" in user_input.lower():
-                            for i, word in enumerate(words):
-                                if word.lower() in ["i'm", "i am", "name", "is"] and i + 1 < len(words):
-                                    potential_name = words[i + 1].strip(',.')
-                                    if potential_name[0].isupper():
-                                        st.session_state.user_name = potential_name
-                                        break
+                    # Extract name
+                    words = user_input.split()
+                    for i, word in enumerate(words):
+                        if word.lower() in ["i'm", "i am", "name", "is"] and i + 1 < len(words):
+                            potential_name = words[i + 1].strip(',.')
+                            if potential_name[0].isupper():
+                                st.session_state.user_name = potential_name
+                                break
                     
-                    # Retrieve context and create plan
-                    context = st.session_state.rag.retrieve_context(
-                        user_input, 
-                        st.session_state.patient_profile
-                    )
+                    context = st.session_state.rag.retrieve_context(user_input, st.session_state.patient_profile)
                     st.session_state.current_plan = st.session_state.rag.create_exercise_plan(
-                        st.session_state.patient_profile,
-                        context
+                        st.session_state.patient_profile, context
                     )
-                    
-                    # Generate personalized welcome response
-                    name_greeting = f"{st.session_state.user_name}" if st.session_state.user_name else "there"
                     response = st.session_state.rag.generate_response(
-                        user_input,
-                        st.session_state.patient_profile,
-                        context,
-                        st.session_state.messages
+                        user_input, st.session_state.patient_profile, context, st.session_state.messages
                     )
-                    
                 else:
-                    # Normal conversation
-                    context = st.session_state.rag.retrieve_context(
-                        user_input,
-                        st.session_state.patient_profile
-                    )
-                    
+                    context = st.session_state.rag.retrieve_context(user_input, st.session_state.patient_profile)
                     response = st.session_state.rag.generate_response(
-                        user_input,
-                        st.session_state.patient_profile,
-                        context,
-                        st.session_state.messages
+                        user_input, st.session_state.patient_profile, context, st.session_state.messages
                     )
                 
-                # Add assistant response
                 st.session_state.messages.append({"role": "assistant", "content": response})
                 
             except Exception as e:
                 st.error(f"Error: {e}")
         
-        # Rerun to update chat
         st.rerun()
-
-else:
-    st.info("⏳ Initializing... This may take a moment.")
-
-# Footer
-st.divider()
-st.markdown("""
-<div style="text-align: center; color: #666; padding: 1rem;">
-    <p><strong>⚠️ Medical Disclaimer:</strong> This tool provides educational information only. Always consult your healthcare provider before starting any exercise program.</p>
-    <p>🔒 Your data is not stored. Each session is private and temporary.</p>
-    <p style="font-size: 0.9rem; margin-top: 1rem;">Made with ❤️ for better knee health</p>
-</div>
-""", unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
