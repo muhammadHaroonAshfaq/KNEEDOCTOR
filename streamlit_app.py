@@ -137,9 +137,6 @@ def page_coach():
     # Floating Restart Button
     st.markdown('<button class="restart-btn" onclick="window.location.reload()">🔄 Restart Chat</button>', unsafe_allow_html=True)
 
-    # Initialize messages
-    if not st.session_state.messages:
-        st.session_state.messages = [{"role": "assistant", "content": "👋 Hi! What’s your name?"}]
 
     chat_container = st.container()
     with chat_container:
