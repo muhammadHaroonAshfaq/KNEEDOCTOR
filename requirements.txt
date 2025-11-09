@@ -5,9 +5,3 @@ chromadb>=0.4.0
 numpy
 pandas
 python-dotenv
-```
-
-**File 2: `.python-version` (NEW FILE)**
-```
-3.11
-
