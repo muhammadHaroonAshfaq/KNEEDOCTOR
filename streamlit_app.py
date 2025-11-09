@@ -6,7 +6,7 @@ from rag_model import KneeArthritisRAG
 
 st.set_page_config(page_title="KneeDoc AI", page_icon="🦵", layout="wide")
 
-# === DARK THEME + GRADIENT CHAT ===
+# === THEME & STYLING ===
 st.markdown("""
 <style>
 .stApp {
@@ -28,7 +28,8 @@ section[data-testid="stSidebar"] {
 .card {
   background: rgba(0,51,102,0.4);
   border-radius: 12px;
-  padding: 1.2rem; margin-bottom: 1rem;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
   border: 1px solid rgba(0,153,255,0.3);
   box-shadow: 0 0 8px rgba(0,153,255,0.2);
 }
@@ -121,8 +122,8 @@ def sidebar_menu():
         st.success("Logged in successfully")
         st.markdown("---")
         menu = st.radio("📍 Navigation", [
-            "Home", "Features", "Exercise Plan", "AI Coach", "FAQ"
-        ], index=["Home", "Features", "Exercise Plan", "AI Coach", "FAQ"].index(st.session_state.page))
+            "Home", "Features", "AI Coach", "FAQ"
+        ], index=["Home", "Features", "AI Coach", "FAQ"].index(st.session_state.page))
         st.session_state.page = menu
         st.markdown("---")
         st.caption("Session started: " + st.session_state.session_start.strftime("%I:%M %p"))
@@ -147,7 +148,7 @@ def page_coach():
 
     rag = st.session_state.rag
 
-    # Initialize chat
+    # Initialize conversation
     if not st.session_state.messages:
         st.session_state.messages.append({
             "role": "assistant",
@@ -155,7 +156,7 @@ def page_coach():
         })
         st.session_state.intake_step = "ask_name"
 
-    # Display chat bubbles
+    # Chat display
     chat_box = st.container()
     with chat_box:
         for msg in st.session_state.messages:
@@ -172,7 +173,7 @@ def page_coach():
             time.sleep(1.1)
             typing.empty()
 
-            # Conversational intake
+            # Conversational intake logic
             if not st.session_state.intake_done:
                 step = st.session_state.intake_step
                 profile = st.session_state.patient_profile
