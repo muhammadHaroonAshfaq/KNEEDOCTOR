@@ -6,21 +6,34 @@ from rag_model import KneeArthritisRAG
 
 st.set_page_config(page_title="KneeDoc AI", page_icon="🦵", layout="wide")
 
-# === DARK THEME CSS ===
+# === DARK + GRADIENT CHAT STYLING ===
 st.markdown("""
 <style>
+/* Global background */
 .stApp {
   background: linear-gradient(160deg, #000000 0%, #001a33 100%) !important;
   color: #ffffff !important;
 }
+
+/* Transparent containers */
 [data-testid="stAppViewContainer"], [data-testid="stHeader"], [data-testid="stSidebar"] {
   background: transparent !important;
   color: #ffffff !important;
 }
-h1,h2,h3,h4,h5,h6,label,p,span,div { color: #ffffff !important; }
-section[data-testid="stSidebar"] {
-  background: rgba(0,0,20,0.85)!important; border-right:1px solid rgba(0,153,255,0.2);
+
+/* Text */
+h1,h2,h3,h4,h5,h6,p,span,div,label {
+  color: #ffffff !important;
+  font-family: "Inter", sans-serif;
 }
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+  background: rgba(0,0,20,0.85)!important;
+  border-right: 1px solid rgba(0,153,255,0.2);
+}
+
+/* Cards */
 .card {
   background: rgba(0,51,102,0.4);
   border-radius: 12px;
@@ -28,19 +41,51 @@ section[data-testid="stSidebar"] {
   border: 1px solid rgba(0,153,255,0.3);
   box-shadow: 0 0 8px rgba(0,153,255,0.2);
 }
+
+/* Chat bubbles */
 .chat-bubble {
-  padding: 1rem; border-radius: 12px; margin-bottom: 0.5rem;
-  max-width: 80%; word-wrap: break-word;
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  margin-bottom: 0.8rem;
+  max-width: 80%;
+  line-height: 1.5;
+  word-wrap: break-word;
+  animation: fadeIn 0.6s ease;
 }
 .user-bubble {
-  background: linear-gradient(135deg,#0055aa,#0099ff);
-  color:white; margin-left:auto;
+  background: linear-gradient(135deg, #0044aa, #0099ff);
+  color: white;
+  margin-left: auto;
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 0 10px rgba(0,153,255,0.3);
 }
 .ai-bubble {
-  background: linear-gradient(135deg,#1a2233,#223a5f);
-  color:#e5e7eb; margin-right:auto;
+  background: linear-gradient(135deg, #121e35, #1e3258);
+  color: #e5e7eb;
+  margin-right: auto;
+  border: 1px solid rgba(0,153,255,0.2);
+  box-shadow: 0 0 10px rgba(0,153,255,0.15);
+  animation: breathe 3s ease-in-out infinite;
 }
-.typing { font-style: italic; color: #8ab4f8; padding: 0.5rem; }
+
+/* Typing indicator */
+.typing {
+  color: #8ab4f8;
+  font-style: italic;
+  padding: 0.6rem 1rem;
+  border-left: 3px solid #33ccff;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 10px rgba(0,153,255,0.2); }
+  50% { box-shadow: 0 0 25px rgba(0,153,255,0.5); }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -61,13 +106,12 @@ for k, v in {
 
 # === LOGIN PAGE ===
 def login_page():
-    st.markdown('<div class="login-container">', unsafe_allow_html=True)
-    st.markdown('<div class="login-card">', unsafe_allow_html=True)
-    st.image("https://cdn.pixabay.com/photo/2017/03/14/15/55/exercise-2140760_1280.png", width=260)
-    st.markdown("<h2>🦵 KneeDoc AI</h2>", unsafe_allow_html=True)
-    st.markdown("<p>Your Personal AI Exercise Coach for Knee Arthritis</p>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center; margin-top:10%;'>", unsafe_allow_html=True)
+    st.image("https://cdn.pixabay.com/photo/2017/03/14/15/55/exercise-2140760_1280.png", width=280)
+    st.markdown("<h2 style='background: linear-gradient(135deg,#33ccff,#0077ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;'>🦵 KneeDoc AI</h2>", unsafe_allow_html=True)
+    st.caption("Your Personal AI Exercise Coach for Knee Arthritis")
 
-    api_key = st.text_input("OpenAI API Key", type="password", placeholder="sk-...")
+    api_key = st.text_input("Enter OpenAI API Key", type="password", placeholder="sk-...")
     if st.button("Continue", use_container_width=True):
         if api_key.startswith("sk-"):
             with st.spinner("Initializing your AI coach..."):
@@ -80,11 +124,11 @@ def login_page():
             st.session_state.page = "Home"
             st.rerun()
         else:
-            st.error("Please enter a valid OpenAI API key.")
-    st.markdown("</div></div>", unsafe_allow_html=True)
+            st.error("Please enter a valid OpenAI API key (starts with 'sk-').")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
-# === SIDEBAR ===
+# === SIDEBAR MENU ===
 def sidebar_menu():
     with st.sidebar:
         st.title("🦵 KneeDoc AI")
@@ -107,57 +151,42 @@ def page_home():
     st.markdown("<div class='card'>• Real-time tracking and insights</div>", unsafe_allow_html=True)
 
 
-# === FEATURES PAGE ===
-def page_features():
-    st.title("⚙️ Features")
-    features = [
-        ("🤖", "AI Coach", "Interactive chat-based knee rehabilitation support."),
-        ("💪", "Custom Exercises", "Tailored routines based on pain and flexibility."),
-        ("📈", "Progress Tracker", "Monitor recovery progress in real-time."),
-        ("🔒", "Data Privacy", "Your data stays local and secure.")
-    ]
-    for emoji, title, desc in features:
-        st.markdown(f"<div class='card'><h3>{emoji} {title}</h3><p style='color:#ccc;'>{desc}</p></div>", unsafe_allow_html=True)
-
-
-# === EXERCISE PAGE ===
-def page_exercise():
-    st.title("💪 Exercise Plan")
-    if not st.session_state.rag_initialized:
-        st.warning("Please log in again to access your exercise plan.")
-        return
-    st.info("Personalized exercise routines will appear here after AI analysis.")
-    st.json({"Example": "Sample plan generated from RAG context."})
-
-
-# === AI COACH PAGE (CONVERSATIONAL FLOW) ===
+# === AI COACH PAGE (ChatGPT-style) ===
 def page_coach():
     st.title("🤖 AI Coach")
+
     if not st.session_state.rag_initialized:
         st.warning("Please log in again to use the AI Coach.")
         return
 
     rag = st.session_state.rag
+
+    # Initial greeting
     if not st.session_state.messages:
         st.session_state.messages.append({
             "role": "assistant",
-            "content": "👋 Hi! I'm your KneeDoc AI Coach. Let's start with your name — what should I call you?"
+            "content": "👋 Hi! I'm your KneeDoc AI Coach. Let's get started — what should I call you?"
         })
         st.session_state.intake_step = "ask_name"
 
-    # Render chat
-    for msg in st.session_state.messages:
-        bubble = "ai-bubble" if msg["role"] == "assistant" else "user-bubble"
-        st.markdown(f"<div class='chat-bubble {bubble}'>{msg['content']}</div>", unsafe_allow_html=True)
+    # Render messages
+    chat_placeholder = st.container()
+    with chat_placeholder:
+        for msg in st.session_state.messages:
+            bubble = "ai-bubble" if msg["role"] == "assistant" else "user-bubble"
+            st.markdown(f"<div class='chat-bubble {bubble}'>{msg['content']}</div>", unsafe_allow_html=True)
 
+    # Chat input
     user_input = st.chat_input("Type your message...")
-
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
-        with st.spinner("KneeDoc AI is typing..."):
-            time.sleep(1)
+        with st.spinner("KneeDoc is thinking..."):
+            typing = st.empty()
+            typing.markdown("<div class='typing'>💬 KneeDoc is typing...</div>", unsafe_allow_html=True)
+            time.sleep(1.3)
+            typing.empty()
 
-            # === Conversational Intake Flow ===
+            # Conversational intake
             if not st.session_state.intake_done:
                 step = st.session_state.intake_step
                 profile = st.session_state.patient_profile
@@ -193,7 +222,6 @@ def page_coach():
                 else:
                     reply = "All details collected! You can now ask for exercises anytime 💪"
 
-            # === After Intake ===
             else:
                 profile = st.session_state.patient_profile
                 context = rag.retrieve_context(user_input, profile)
@@ -216,17 +244,13 @@ def page_faq():
             st.write(a)
 
 
-# === ROUTING ===
+# === ROUTER ===
 if not st.session_state.api_key:
     login_page()
 else:
     sidebar_menu()
     if st.session_state.page == "Home":
         page_home()
-    elif st.session_state.page == "Features":
-        page_features()
-    elif st.session_state.page == "Exercise Plan":
-        page_exercise()
     elif st.session_state.page == "AI Coach":
         page_coach()
     elif st.session_state.page == "FAQ":
