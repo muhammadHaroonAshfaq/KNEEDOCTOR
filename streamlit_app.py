@@ -11,6 +11,7 @@ st.markdown("""
 body {
   background: radial-gradient(circle at top left, #1a1f35 0%, #0d1117 70%);
   color: #e6e8eb;
+  transition: opacity 0.6s ease-in;
 }
 h1, h2, h3, h4, h5, h6 { color: #fff; }
 .stApp { background-color: transparent; }
@@ -24,6 +25,7 @@ h1, h2, h3, h4, h5, h6 { color: #fff; }
   padding: 3rem 3.5rem; border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
   text-align: center; max-width: 420px; width: 90%;
+  animation: fadeIn 0.7s ease-in-out;
 }
 .login-card h2 {
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -40,16 +42,18 @@ h1, h2, h3, h4, h5, h6 { color: #fff; }
   box-shadow: 0 0 20px rgba(118, 75, 162, 0.6);
   transform: translateY(-2px);
 }
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
 </style>
 """, unsafe_allow_html=True)
-
 
 # --- Initialize session state ---
 for key in ["api_key", "rag", "rag_initialized", "session_start"]:
     if key not in st.session_state:
         st.session_state[key] = None if "initialized" not in key else False
 st.session_state.session_start = st.session_state.session_start or datetime.now()
-
 
 # --- Login Page ---
 def login_page():
@@ -68,12 +72,15 @@ def login_page():
                 st.session_state.rag = KneeArthritisRAG(loader, api_key)
                 st.session_state.rag_initialized = True
             st.success("✅ Login successful! Redirecting...")
-            st.experimental_rerun()
+            st.markdown(
+                "<script>setTimeout(()=>{window.parent.location.reload()}, 1000)</script>",
+                unsafe_allow_html=True
+            )
+            st.rerun()
         else:
             st.error("Please enter a valid OpenAI API key (starts with 'sk-').")
 
     st.markdown("</div></div>", unsafe_allow_html=True)
-
 
 # --- Route to pages after login ---
 if not st.session_state.api_key:
