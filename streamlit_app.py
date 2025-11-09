@@ -6,34 +6,25 @@ from rag_model import KneeArthritisRAG
 
 st.set_page_config(page_title="KneeDoc AI", page_icon="🦵", layout="wide")
 
-# === DARK + GRADIENT CHAT STYLING ===
+# === DARK THEME + GRADIENT CHAT ===
 st.markdown("""
 <style>
-/* Global background */
 .stApp {
   background: linear-gradient(160deg, #000000 0%, #001a33 100%) !important;
   color: #ffffff !important;
 }
-
-/* Transparent containers */
 [data-testid="stAppViewContainer"], [data-testid="stHeader"], [data-testid="stSidebar"] {
   background: transparent !important;
   color: #ffffff !important;
 }
-
-/* Text */
 h1,h2,h3,h4,h5,h6,p,span,div,label {
   color: #ffffff !important;
   font-family: "Inter", sans-serif;
 }
-
-/* Sidebar */
 section[data-testid="stSidebar"] {
   background: rgba(0,0,20,0.85)!important;
   border-right: 1px solid rgba(0,153,255,0.2);
 }
-
-/* Cards */
 .card {
   background: rgba(0,51,102,0.4);
   border-radius: 12px;
@@ -41,8 +32,6 @@ section[data-testid="stSidebar"] {
   border: 1px solid rgba(0,153,255,0.3);
   box-shadow: 0 0 8px rgba(0,153,255,0.2);
 }
-
-/* Chat bubbles */
 .chat-bubble {
   padding: 1rem 1.2rem;
   border-radius: 14px;
@@ -67,8 +56,6 @@ section[data-testid="stSidebar"] {
   box-shadow: 0 0 10px rgba(0,153,255,0.15);
   animation: breathe 3s ease-in-out infinite;
 }
-
-/* Typing indicator */
 .typing {
   color: #8ab4f8;
   font-style: italic;
@@ -76,8 +63,6 @@ section[data-testid="stSidebar"] {
   border-left: 3px solid #33ccff;
   animation: fadeIn 0.5s ease-in-out;
 }
-
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -89,6 +74,7 @@ section[data-testid="stSidebar"] {
 </style>
 """, unsafe_allow_html=True)
 
+
 # === SESSION STATE ===
 for k, v in {
     "api_key": None,
@@ -99,7 +85,8 @@ for k, v in {
     "messages": [],
     "intake_step": None,
     "intake_done": False,
-    "patient_profile": {}
+    "patient_profile": {},
+    "exercise_plan": None
 }.items():
     st.session_state.setdefault(k, v)
 
@@ -151,7 +138,7 @@ def page_home():
     st.markdown("<div class='card'>• Real-time tracking and insights</div>", unsafe_allow_html=True)
 
 
-# === AI COACH PAGE (ChatGPT-style) ===
+# === AI COACH PAGE ===
 def page_coach():
     st.title("🤖 AI Coach")
 
@@ -161,32 +148,32 @@ def page_coach():
 
     rag = st.session_state.rag
 
-    # Initial greeting
+    # Initial message
     if not st.session_state.messages:
         st.session_state.messages.append({
             "role": "assistant",
-            "content": "👋 Hi! I'm your KneeDoc AI Coach. Let's get started — what should I call you?"
+            "content": "👋 Hi! I'm your KneeDoc AI Coach. Let's begin — what should I call you?"
         })
         st.session_state.intake_step = "ask_name"
 
-    # Render messages
-    chat_placeholder = st.container()
-    with chat_placeholder:
+    # Display chat bubbles
+    chat_box = st.container()
+    with chat_box:
         for msg in st.session_state.messages:
             bubble = "ai-bubble" if msg["role"] == "assistant" else "user-bubble"
             st.markdown(f"<div class='chat-bubble {bubble}'>{msg['content']}</div>", unsafe_allow_html=True)
 
-    # Chat input
+    # User input
     user_input = st.chat_input("Type your message...")
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
         with st.spinner("KneeDoc is thinking..."):
             typing = st.empty()
             typing.markdown("<div class='typing'>💬 KneeDoc is typing...</div>", unsafe_allow_html=True)
-            time.sleep(1.3)
+            time.sleep(1.2)
             typing.empty()
 
-            # Conversational intake
+            # Intake conversation
             if not st.session_state.intake_done:
                 step = st.session_state.intake_step
                 profile = st.session_state.patient_profile
@@ -215,7 +202,8 @@ def page_coach():
                         pain = int("".join([c for c in user_input if c.isdigit()]))
                         profile["pain_level"] = pain
                         st.session_state.intake_done = True
-                        reply = f"Thanks! Based on your pain level ({pain}/10), I’ll create your personalized exercise plan 🏋️"
+                        st.session_state.exercise_plan = rag.create_exercise_plan(profile, {})
+                        reply = f"Thanks! Based on your pain level ({pain}/10), here’s your personalized exercise plan 🏋️"
                     except:
                         reply = "Please rate your pain between 1 and 10."
 
@@ -229,6 +217,18 @@ def page_coach():
 
         st.session_state.messages.append({"role": "assistant", "content": reply})
         st.rerun()
+
+    # Show exercise plan when ready
+    if st.session_state.intake_done and st.session_state.exercise_plan:
+        st.markdown("### 🏋️ Your Personalized Exercise Plan")
+        for ex in st.session_state.exercise_plan["exercises"]:
+            with st.expander(f"{ex['name']} (Difficulty {ex['difficulty']}/4)"):
+                st.markdown(f"**Category:** {ex['category']}")
+                st.markdown(f"**Reps/Sets:** {ex['reps']} reps × {ex['sets']} sets")
+                st.markdown("**Instructions:**")
+                for i in ex["instructions"]:
+                    st.markdown(f"- {i}")
+                st.markdown(f"**Primary Benefit:** {ex['category']} improvement")
 
 
 # === FAQ PAGE ===
