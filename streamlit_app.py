@@ -25,14 +25,6 @@ section[data-testid="stSidebar"] {
   background: rgba(0,0,20,0.85)!important;
   border-right: 1px solid rgba(0,153,255,0.2);
 }
-.card {
-  background: rgba(0,51,102,0.4);
-  border-radius: 12px;
-  padding: 1.2rem;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(0,153,255,0.3);
-  box-shadow: 0 0 8px rgba(0,153,255,0.2);
-}
 .chat-bubble {
   padding: 1rem 1.2rem;
   border-radius: 14px;
@@ -81,7 +73,7 @@ for k, v in {
     "rag": None,
     "rag_initialized": False,
     "session_start": datetime.now(),
-    "page": "Home",
+    "page": "AI Coach",
     "messages": [],
     "intake_step": None,
     "intake_done": False,
@@ -108,7 +100,7 @@ def login_page():
                 st.session_state.api_key = api_key
             st.success("✅ Login successful! Redirecting...")
             time.sleep(0.8)
-            st.session_state.page = "Home"
+            st.session_state.page = "AI Coach"
             st.rerun()
         else:
             st.error("Please enter a valid OpenAI API key (starts with 'sk-').")
@@ -122,20 +114,11 @@ def sidebar_menu():
         st.success("Logged in successfully")
         st.markdown("---")
         menu = st.radio("📍 Navigation", [
-            "Home", "Features", "AI Coach", "FAQ"
-        ], index=["Home", "Features", "AI Coach", "FAQ"].index(st.session_state.page))
+            "AI Coach", "FAQ"
+        ], index=["AI Coach", "FAQ"].index(st.session_state.page))
         st.session_state.page = menu
         st.markdown("---")
         st.caption("Session started: " + st.session_state.session_start.strftime("%I:%M %p"))
-
-
-# === HOME PAGE ===
-def page_home():
-    st.markdown("<h1 style='text-align:center;'>Welcome to KneeDoc AI 🦵</h1>", unsafe_allow_html=True)
-    st.image("https://cdn-icons-png.flaticon.com/512/2920/2920243.png", width=200)
-    st.markdown("<div class='card'>• Personalized AI recommendations</div>", unsafe_allow_html=True)
-    st.markdown("<div class='card'>• Guided exercises for recovery</div>", unsafe_allow_html=True)
-    st.markdown("<div class='card'>• Real-time tracking and insights</div>", unsafe_allow_html=True)
 
 
 # === AI COACH PAGE ===
@@ -148,7 +131,7 @@ def page_coach():
 
     rag = st.session_state.rag
 
-    # Initialize conversation
+    # Initialize chat
     if not st.session_state.messages:
         st.session_state.messages.append({
             "role": "assistant",
@@ -156,14 +139,12 @@ def page_coach():
         })
         st.session_state.intake_step = "ask_name"
 
-    # Chat display
     chat_box = st.container()
     with chat_box:
         for msg in st.session_state.messages:
             bubble = "ai-bubble" if msg["role"] == "assistant" else "user-bubble"
             st.markdown(f"<div class='chat-bubble {bubble}'>{msg['content']}</div>", unsafe_allow_html=True)
 
-    # User input
     user_input = st.chat_input("Type your message...")
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
@@ -173,7 +154,7 @@ def page_coach():
             time.sleep(1.1)
             typing.empty()
 
-            # Conversational intake logic
+            # Conversational intake
             if not st.session_state.intake_done:
                 step = st.session_state.intake_step
                 profile = st.session_state.patient_profile
@@ -205,13 +186,13 @@ def page_coach():
                         st.session_state.exercise_plan = rag.create_exercise_plan(profile, {})
                         reply = (
                             f"Thanks! Based on your pain level ({pain}/10), I’ve designed a few exercises for you. "
-                            f"Would you like tips on managing pain during them? 🧘‍♀️"
+                            f"I'll keep these in mind when guiding you further 🧘‍♀️"
                         )
                     except:
                         reply = "Please rate your pain between 1 and 10."
 
                 else:
-                    reply = "All details collected! You can now ask for exercises anytime 💪"
+                    reply = "All details collected! You can now ask for exercises or tips anytime 💪"
 
             else:
                 profile = st.session_state.patient_profile
@@ -221,53 +202,13 @@ def page_coach():
         st.session_state.messages.append({"role": "assistant", "content": reply})
         st.rerun()
 
-    # === EXERCISE PLAN DISPLAY ===
-    if st.session_state.intake_done and st.session_state.exercise_plan:
-        st.markdown("<br><hr>", unsafe_allow_html=True)
-        st.markdown("<h3 style='color:#33ccff;'>🏋️ Your Personalized Exercise Plan</h3>", unsafe_allow_html=True)
-
-        st.markdown("""
-        <style>
-        .exercise-card {
-            background: linear-gradient(135deg, rgba(0,40,80,0.85), rgba(0,90,180,0.45));
-            border: 1px solid rgba(0,153,255,0.3);
-            border-radius: 14px;
-            padding: 1rem 1.2rem;
-            margin-top: 1rem;
-            box-shadow: 0 0 10px rgba(0,153,255,0.2);
-            transition: all 0.2s ease-in-out;
-        }
-        .exercise-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 20px rgba(0,153,255,0.4);
-        }
-        .exercise-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #66ccff;
-        }
-        .exercise-detail {
-            color: #e5e7eb;
-            font-size: 0.95rem;
-            margin-top: 0.4rem;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
-        plan = st.session_state.exercise_plan["exercises"]
-        for ex in plan:
-            with st.container():
-                st.markdown(f"""
-                <div class="exercise-card">
-                    <div class="exercise-title">💪 {ex['name']} (Difficulty {ex['difficulty']}/4)</div>
-                    <div class="exercise-detail"><b>Category:</b> {ex['category']}</div>
-                    <div class="exercise-detail"><b>Reps/Sets:</b> {ex['reps']} reps × {ex['sets']} sets</div>
-                    <div class="exercise-detail"><b>Instructions:</b></div>
-                </div>
-                """, unsafe_allow_html=True)
-                for step in ex["instructions"]:
-                    st.markdown(f"• {step}")
-                st.markdown(f"**Primary Benefit:** {ex['category']} improvement")
+    # 🔒 Exercise cards hidden (logic still runs in background)
+    # You can re-enable later by uncommenting the below block:
+    #
+    # if st.session_state.intake_done and st.session_state.exercise_plan:
+    #     st.markdown("<br><hr>", unsafe_allow_html=True)
+    #     st.markdown("<h3 style='color:#33ccff;'>🏋️ Personalized Exercise Plan Generated (Hidden)</h3>", unsafe_allow_html=True)
+    #     st.caption("⚙️ The plan has been generated internally but is currently hidden from display.")
 
 
 # === FAQ PAGE ===
@@ -288,9 +229,7 @@ if not st.session_state.api_key:
     login_page()
 else:
     sidebar_menu()
-    if st.session_state.page == "Home":
-        page_home()
-    elif st.session_state.page == "AI Coach":
+    if st.session_state.page == "AI Coach":
         page_coach()
     elif st.session_state.page == "FAQ":
         page_faq()
