@@ -74,7 +74,6 @@ section[data-testid="stSidebar"] {
 </style>
 """, unsafe_allow_html=True)
 
-
 # === SESSION STATE ===
 for k, v in {
     "api_key": None,
@@ -148,7 +147,7 @@ def page_coach():
 
     rag = st.session_state.rag
 
-    # Initial message
+    # Initialize chat
     if not st.session_state.messages:
         st.session_state.messages.append({
             "role": "assistant",
@@ -170,10 +169,10 @@ def page_coach():
         with st.spinner("KneeDoc is thinking..."):
             typing = st.empty()
             typing.markdown("<div class='typing'>💬 KneeDoc is typing...</div>", unsafe_allow_html=True)
-            time.sleep(1.2)
+            time.sleep(1.1)
             typing.empty()
 
-            # Intake conversation
+            # Conversational intake
             if not st.session_state.intake_done:
                 step = st.session_state.intake_step
                 profile = st.session_state.patient_profile
@@ -203,7 +202,10 @@ def page_coach():
                         profile["pain_level"] = pain
                         st.session_state.intake_done = True
                         st.session_state.exercise_plan = rag.create_exercise_plan(profile, {})
-                        reply = f"Thanks! Based on your pain level ({pain}/10), here’s your personalized exercise plan 🏋️"
+                        reply = (
+                            f"Thanks! Based on your pain level ({pain}/10), I’ve designed a few exercises for you. "
+                            f"Would you like tips on managing pain during them? 🧘‍♀️"
+                        )
                     except:
                         reply = "Please rate your pain between 1 and 10."
 
@@ -218,16 +220,52 @@ def page_coach():
         st.session_state.messages.append({"role": "assistant", "content": reply})
         st.rerun()
 
-    # Show exercise plan when ready
+    # === EXERCISE PLAN DISPLAY ===
     if st.session_state.intake_done and st.session_state.exercise_plan:
-        st.markdown("### 🏋️ Your Personalized Exercise Plan")
-        for ex in st.session_state.exercise_plan["exercises"]:
-            with st.expander(f"{ex['name']} (Difficulty {ex['difficulty']}/4)"):
-                st.markdown(f"**Category:** {ex['category']}")
-                st.markdown(f"**Reps/Sets:** {ex['reps']} reps × {ex['sets']} sets")
-                st.markdown("**Instructions:**")
-                for i in ex["instructions"]:
-                    st.markdown(f"- {i}")
+        st.markdown("<br><hr>", unsafe_allow_html=True)
+        st.markdown("<h3 style='color:#33ccff;'>🏋️ Your Personalized Exercise Plan</h3>", unsafe_allow_html=True)
+
+        st.markdown("""
+        <style>
+        .exercise-card {
+            background: linear-gradient(135deg, rgba(0,40,80,0.85), rgba(0,90,180,0.45));
+            border: 1px solid rgba(0,153,255,0.3);
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+            box-shadow: 0 0 10px rgba(0,153,255,0.2);
+            transition: all 0.2s ease-in-out;
+        }
+        .exercise-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0,153,255,0.4);
+        }
+        .exercise-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #66ccff;
+        }
+        .exercise-detail {
+            color: #e5e7eb;
+            font-size: 0.95rem;
+            margin-top: 0.4rem;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        plan = st.session_state.exercise_plan["exercises"]
+        for ex in plan:
+            with st.container():
+                st.markdown(f"""
+                <div class="exercise-card">
+                    <div class="exercise-title">💪 {ex['name']} (Difficulty {ex['difficulty']}/4)</div>
+                    <div class="exercise-detail"><b>Category:</b> {ex['category']}</div>
+                    <div class="exercise-detail"><b>Reps/Sets:</b> {ex['reps']} reps × {ex['sets']} sets</div>
+                    <div class="exercise-detail"><b>Instructions:</b></div>
+                </div>
+                """, unsafe_allow_html=True)
+                for step in ex["instructions"]:
+                    st.markdown(f"• {step}")
                 st.markdown(f"**Primary Benefit:** {ex['category']} improvement")
 
 
