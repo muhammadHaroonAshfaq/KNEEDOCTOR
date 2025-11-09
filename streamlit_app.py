@@ -1,5 +1,5 @@
 # streamlit_app.py
-"""KneeDoc AI — ChatGPT-style interface with collapsible sidebar, live streaming, typing animation, and timestamps."""
+"""KneeDoc AI — ChatGPT-style interface with visible sidebar, wide layout, live streaming, typing animation, and timestamps."""
 
 import streamlit as st
 from datetime import datetime
@@ -10,39 +10,32 @@ from rag_model import KneeArthritisRAG
 
 
 # --------------------------------------------------------
-# PAGE CONFIG
+# PAGE CONFIG - CRITICAL FIX: Changed to "wide" for sidebar visibility
 # --------------------------------------------------------
 st.set_page_config(
     page_title="KneeDoc AI",
     page_icon="🦵",
-    # Changed to 'centered' for better control over the main chat width
-    layout="centered" 
+    layout="wide" 
 )
 
 
 # --------------------------------------------------------
-# MODERN CHATGPT-LIKE CSS (Optimized for Alignment)
+# MODERN CHATGPT-LIKE CSS (Optimized for Wide Layout and Visibility)
 # --------------------------------------------------------
 st.markdown("""
 <style>
 /* Base Streamlit Overrides */
-#MainMenu, header, footer {visibility: hidden;}
-.stApp {background-color: #ffffff;} 
-.main {background-color: #f0f2f6;} 
-.css-1rs6k0q {padding-top: 60px;} /* Push content down to clear fixed nav bar */
-.stChatInput {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    /* Ensure chat input is visible and centered */
-    max-width: 800px; 
-    left: 50%;
-    transform: translateX(-50%);
-    background: #f0f2f6; /* Match main body background */
-    padding: 10px 0;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+#MainMenu, footer {visibility: hidden;}
+
+/* CRITICAL FIX: Main content area pushes down to clear the fixed top nav */
+/* Targeting the main container that holds the chat content */
+.block-container {
+    padding-top: 60px; 
+    max-width: 100%; /* Use full width for the application background */
 }
 
+/* Background Color */
+.stApp {background-color: #f0f2f6;} 
 
 /* Fixed Top Navigation Bar */
 .top-nav {
@@ -56,22 +49,36 @@ st.markdown("""
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 .logo {font-size: 1.6rem; font-weight: 700; color: white;}
-.toggle-btn {display: none;} 
 
-/* Main Chat Container - Adjusted for reliable clearance and width */
+
+/* Main Chat Container - Now Centered within the wide layout */
 .chat-container {
-    max-width: 800px; 
-    /* Increased margin-bottom to clear the fixed stChatInput */
-    margin: 30px auto 100px auto; 
+    max-width: 800px; /* Max width for a readable chat interface */
+    margin: 30px auto 100px auto; /* Centering it horizontally */
     padding: 1.5rem 1rem;
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 
-/* Message Structure - CRITICAL FIX: Ensures alignment and timestamp placement */
+/* Chat Input Bar - Adjusted to center beneath the chat container */
+.stChatInput {
+    position: fixed;
+    bottom: 0;
+    /* Use fixed width for centering - adjust as needed based on st.layout*/
+    width: 800px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f0f2f6; 
+    padding: 10px 0;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    z-index: 999;
+}
+
+
+/* Message Structure (Same as previous fix) */
 .message-full-wrapper {
-    margin: 1.5rem 0; /* Clear spacing between messages */
+    margin: 1.5rem 0; 
 }
 .message-wrapper {
     display: flex; 
@@ -101,7 +108,7 @@ st.markdown("""
     padding: 1rem 1.3rem; 
     border-radius: 20px; 
     font-size: 1rem; line-height: 1.5;
-    word-break: break-word; /* Prevents overflow issues */
+    word-break: break-word; 
 }
 .message-user .message-content {
     background: linear-gradient(135deg, #5c6bc0, #7986cb);
@@ -114,27 +121,26 @@ st.markdown("""
     border-top-left-radius: 4px;
 }
 
-/* Timestamp - FIXED: Aligned directly below the message content */
+/* Timestamp */
 .timestamp {
     font-size: 0.7rem;
     color: #999;
-    /* Move to a separate flex-item for better control */
-    text-align: right;
     margin-top: 5px;
 }
 .user-timestamp {
     text-align: right;
+    /* Push timestamp to align with the end of the user message bubble */
+    padding-right: 46px; 
 }
 .assistant-timestamp {
     text-align: left;
-    margin-left: 46px; /* Push it under the message content, aligning with the bubble's start */
+    margin-left: 46px; 
 }
 
-
-/* Typing Indicator - Corrected horizontal alignment */
+/* Typing Indicator */
 .typing-indicator {
     display: flex; gap: 6px; align-items: center; 
-    margin-left: 46px; /* Align under the assistant's avatar */
+    margin-left: 46px; 
     margin-top: 10px;
 }
 .typing-dot {
@@ -145,7 +151,12 @@ st.markdown("""
 .typing-dot:nth-child(3) {animation-delay: 0.4s;}
 @keyframes blink {0%, 80%, 100% {opacity: 0;} 40% {opacity: 1;}}
 
-/* Sidebar/Button Styling - Improved look */
+/* Sidebar Styling - Ensure it clears the top nav */
+.stSidebar {
+    padding-top: 60px; 
+    background-color: white !important; /* Ensure white background for settings */
+    box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+}
 .stButton>button {
     background: linear-gradient(135deg, #5c6bc0, #7986cb); 
     color: white; border: none; padding: 0.7rem 1.5rem;
@@ -156,17 +167,12 @@ st.markdown("""
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(92, 107, 192, 0.3);
 }
-/* Adjust Streamlit's native sidebar styling for better integration */
-.stSidebar {
-    padding-top: 60px; 
-    box-shadow: 2px 0 8px rgba(0,0,0,0.05);
-}
 </style>
 """, unsafe_allow_html=True)
 
 
 # --------------------------------------------------------
-# SESSION STATE
+# SESSION STATE (No Change)
 # --------------------------------------------------------
 defaults = {
     "messages": [],
@@ -182,7 +188,7 @@ for k, v in defaults.items():
 
 
 # --------------------------------------------------------
-# DATA LOADING & CACHING (Integration Unchanged)
+# DATA LOADING & CACHING (No Change)
 # --------------------------------------------------------
 @st.cache_resource
 def load_data():
@@ -209,12 +215,11 @@ st.markdown("""
 
 
 # --------------------------------------------------------
-# SIDEBAR
+# SIDEBAR (Using native Streamlit sidebar - now visible in wide mode)
 # --------------------------------------------------------
 with st.sidebar:
     st.markdown("### ⚙️ Settings")
 
-    # The API Key input remains the same
     api_key = st.text_input("🔑 OpenAI API Key", type="password", placeholder="sk-...")
     
     if api_key:
@@ -222,7 +227,6 @@ with st.sidebar:
         if not st.session_state.rag_initialized:
             with st.spinner("Loading exercise database..."):
                 try:
-                    # Integration with data_loader and rag_model remains the same
                     loader = load_data()
                     st.session_state.rag = initialize_rag(loader, api_key)
                     st.session_state.rag_initialized = True
@@ -289,7 +293,7 @@ else:
         role_class = "message-user" if msg["role"] == "user" else "message-assistant"
         avatar = "👤" if msg["role"] == "user" else "🤖"
         
-        # CRITICAL FIX: The HTML is structured for two separate lines/alignments
+        # HTML structure for user message
         if msg["role"] == "user":
             message_html = f"""
             <div class="message-full-wrapper">
@@ -300,6 +304,7 @@ else:
                 <div class="timestamp user-timestamp">{msg['time']}</div>
             </div>
             """
+        # HTML structure for assistant message
         else:
              message_html = f"""
             <div class="message-full-wrapper">
@@ -344,7 +349,6 @@ else:
         try:
             rag = st.session_state.rag
             
-            # This logic remains untouched to maintain integration with rag_model
             if not st.session_state.patient_profile:
                 profile = rag.extract_patient_info(user_input)
                 st.session_state.patient_profile = profile
@@ -352,8 +356,6 @@ else:
                     (w.strip(",.") for w in user_input.split() if w[0].isupper()), "User"
                 )
                 ctx = rag.retrieve_context(user_input, profile)
-                # plan = rag.create_exercise_plan(profile, ctx) # Commented out as before
-                # st.session_state.current_plan = plan 
                 full_reply = rag.generate_response(user_input, profile, ctx, st.session_state.messages)
             else:
                 ctx = rag.retrieve_context(user_input, st.session_state.patient_profile)
@@ -370,7 +372,7 @@ else:
             for token in full_reply.split():
                 displayed_content += token + " "
                 
-                # FIXED: HTML for streaming response display, uses the same alignment fix
+                # HTML for streaming response display
                 streaming_html = f"""
                 <div class="message-full-wrapper">
                     <div class="message-wrapper message-assistant">
