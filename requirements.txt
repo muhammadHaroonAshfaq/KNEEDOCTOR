@@ -1,8 +1,8 @@
 streamlit>=1.29.0
 openai>=1.6.0
 sentence-transformers>=2.2.0
-chromadb>=0.4.0
 numpy
 pandas
 python-dotenv
 rapidfuzz
+plotly>=5.0.0

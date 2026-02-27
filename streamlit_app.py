@@ -1,205 +1,156 @@
+"""KneeDoc AI — Main application router (production-ready 42-screen build)."""
 import streamlit as st
 from datetime import datetime
-import time
-from data_loader import KneeArthritisDataLoader
-from rag_model import KneeArthritisRAG
 
-st.set_page_config(page_title="Knee Rehab Assistant", page_icon="🏋️", layout="wide")
+# ── Page config — must be first Streamlit call ──────────────────────────────
+st.set_page_config(
+    page_title="KneeDoc AI — Knee Therapy Coach",
+    page_icon="🦵",
+    layout="wide",
+    initial_sidebar_state="expanded",  # always expanded; hidden via CSS on auth pages
+)
 
-# === GLOBAL STYLES ===
-st.markdown("""
-<style>
-.stApp {
-  background: linear-gradient(160deg, #000000 0%, #001a33 100%) !important;
-  color: #ffffff !important;
-}
-[data-testid="stAppViewContainer"], [data-testid="stHeader"], [data-testid="stSidebar"] {
-  background: transparent !important;
-  color: #ffffff !important;
-}
-h1, h2, h3, h4, h5, h6, label, p, span, div { color: #ffffff !important; }
-section[data-testid="stSidebar"] {
-  background: rgba(0, 0, 20, 0.85) !important;
-  color: white !important;
-  border-right: 1px solid rgba(0,153,255,0.2);
-}
-.card {
-  background: rgba(0,51,102,0.4);
-  border-radius: 12px;
-  padding: 1.2rem;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(0,153,255,0.3);
-  box-shadow: 0 0 8px rgba(0,153,255,0.2);
-}
 
-/* Floating Restart Chat Button */
-.restart-btn {
-  position: fixed;
-  top: 20px;
-  right: 25px;
-  background-color: white;
-  color: black;
-  border: none;
-  border-radius: 50px;
-  padding: 10px 18px;
-  font-weight: 600;
-  box-shadow: 0 2px 10px rgba(255,255,255,0.3);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 1000;
-}
-.restart-btn:hover {
-  background-color: black;
-  color: white;
-  box-shadow: 0 0 15px rgba(255,255,255,0.7);
-  transform: scale(1.05);
-}
+# ── Design system ─────────────────────────────────────────────────────────────
+from design import inject_css, go, PRIMARY, MUTED, TEXT, BORDER
+inject_css()
 
-/* Chat bubbles */
-.chat-bubble {padding: 1rem; border-radius: 12px; margin-bottom: 0.5rem; max-width: 80%; word-wrap: break-word;}
-.user-bubble {background: linear-gradient(135deg, #0055aa, #0099ff); align-self: flex-end; color: white; margin-left: auto;}
-.ai-bubble {background: linear-gradient(135deg, #1a2233, #223a5f); color: #e5e7eb; align-self: flex-start;}
-.typing {font-style: italic; color: #8ab4f8; padding: 0.5rem;}
-</style>
-""", unsafe_allow_html=True)
-
-# === SESSION STATE ===
-for k, v in {
-    "api_key": None,
-    "rag": None,
-    "rag_initialized": False,
-    "session_start": datetime.now(),
-    "page": "Home",
-    "messages": [],
-}.items():
+# ── Session state defaults ────────────────────────────────────────────────────
+_defaults = {
+    "api_key":              None,
+    "user_name":            "",
+    "user_email":           "",
+    "rag":                  None,
+    "rag_initialized":      False,
+    "current_page":         "splash",
+    "therapy_page":         "plan",
+    "progress_page":        "dashboard",
+    "patient_profile":      {},
+    "session_plan":         [],
+    "pain_log":             [],
+    "rom_log":              [],
+    "flare_log":            [],
+    "completed_sessions":   0,
+    "chat_messages":        [],
+    "saved_answers":        [],
+    "ob_step":              1,
+    "active_ex_idx":        0,
+    "checkin_done":         False,
+    "clinical_report":      "",
+    "preview_ex":           {},
+}
+for k, v in _defaults.items():
     st.session_state.setdefault(k, v)
 
-# === LOGIN PAGE ===
-def login_page():
-    st.markdown('<div class="login-container" style="text-align:center;">', unsafe_allow_html=True)
-    st.image("https://cdn.pixabay.com/photo/2017/03/14/15/55/exercise-2140760_1280.png", width=260)
-    st.markdown("<h2>🏋️ Knee Rehab Assistant</h2>", unsafe_allow_html=True)
-    st.markdown("<p>Your AI-powered knee rehabilitation coach</p>", unsafe_allow_html=True)
+# ── Hide sidebar on auth/onboarding pages, show on main app ──────────────────
+_NO_SIDEBAR_PAGES = ("splash", "welcome", "signup", "login", "onboarding")
+if st.session_state.get("current_page", "splash") in _NO_SIDEBAR_PAGES:
+    st.html("""<style>
+    section[data-testid="stSidebar"],
+    button[data-testid="collapsedControl"] { display:none !important; }
+    </style>""")
 
-    api_key = st.text_input("OpenAI API Key", type="password", placeholder="sk-...")
-    if st.button("Continue"):
-        if api_key.startswith("sk-"):
-            st.session_state.api_key = api_key
-            with st.spinner("Initializing your AI coach..."):
-                loader = KneeArthritisDataLoader(data_dir="data")
-                loader.load_all()
-                st.session_state.rag = KneeArthritisRAG(loader, api_key)
-                st.session_state.rag_initialized = True
-            st.success("✅ Login successful! Redirecting...")
-            time.sleep(1)
-            st.session_state.page = "AI Coach"
-            st.rerun()
-        else:
-            st.error("Please enter a valid API key starting with 'sk-'")
 
-# === SIDEBAR ===
-def sidebar_menu():
+# ── Sidebar navigation (main app only) ───────────────────────────────────────
+def _sidebar():
+    profile = st.session_state.patient_profile
     with st.sidebar:
-        st.title("🏋️ Knee Rehab Assistant")
-        st.success("Logged in successfully")
-        menu = st.radio("📍 Navigation", ["Home", "Features", "AI Coach", "FAQ"],
-                        index=["Home", "Features", "AI Coach", "FAQ"].index(st.session_state.page))
-        st.session_state.page = menu
-        st.caption("Session started: " + st.session_state.session_start.strftime("%I:%M %p"))
+        st.markdown(f"""
+        <div style='padding:1rem 0 0.5rem;text-align:center;'>
+          <div style='font-size:2rem;'>🦵</div>
+          <div style='font-weight:800;font-size:1.1rem;color:{PRIMARY};'>KneeDoc AI</div>
+          <div style='font-size:0.78rem;color:{MUTED};'>Recovery Coach</div>
+        </div>
+        <hr style='border-color:{BORDER};margin:0.5rem 0;'>
+        """, unsafe_allow_html=True)
 
-# === PAGES ===
-def page_home():
-    st.title("Welcome to Knee Rehab Assistant 🦵")
-    st.markdown("<div class='card'>• Personalized AI guidance for knee health</div>", unsafe_allow_html=True)
-    st.markdown("<div class='card'>• Step-by-step pain and recovery analysis</div>", unsafe_allow_html=True)
-    st.markdown("<div class='card'>• Safe and guided exercises</div>", unsafe_allow_html=True)
+        # User summary
+        pain  = profile.get("pain_level", "—")
+        stage = profile.get("stage","—")
+        streak= profile.get("streak", 0)
+        st.markdown(f"""
+        <div style='background:#F7FAFC;border-radius:12px;padding:0.8rem;margin-bottom:0.8rem;font-size:0.85rem;'>
+          <strong>{profile.get("name","User")}</strong><br>
+          <span style='color:{MUTED};'>{stage} · Pain {pain}/10 · 🔥{streak}</span>
+        </div>""", unsafe_allow_html=True)
 
-def page_features():
-    st.title("⚙️ Features")
-    features = [
-        ("🤖", "AI Rehab Coach", "Conversational assistant that guides you through knee recovery."),
-        ("💪", "Custom Exercises", "Tailored workouts for your pain level and flexibility."),
-        ("📊", "Progress Tracker", "Monitor improvements in mobility."),
-        ("🔒", "Data Privacy", "Your data stays local and secure.")
-    ]
-    for emoji, title, desc in features:
-        st.markdown(f"<div class='card'><h3>{emoji} {title}</h3><p>{desc}</p></div>", unsafe_allow_html=True)
+        pages = [
+            ("🏠", "Home",     "home"),
+            ("🦵", "Therapy",  "therapy"),
+            ("📊", "Progress", "progress"),
+            ("🤖", "AI Coach", "coach"),
+            ("👤", "Profile",  "profile"),
+        ]
+        cur = st.session_state.current_page
+        for icon, label, key in pages:
+            active = cur == key
+            bg = f"background:#EBF8FF;color:{PRIMARY};font-weight:700;" if active else ""
+            col = st.columns([1,4])[0]
+            if st.button(f"{icon} {label}", key=f"nav_{key}", use_container_width=True):
+                st.session_state.current_page = key
+                st.rerun()
 
-def page_coach():
-    st.title("🤖 AI Rehab Coach")
+        st.markdown("<hr style='border-color:#E2E8F0;margin:1rem 0 0.5rem;'>", unsafe_allow_html=True)
 
-    if not st.session_state.rag_initialized:
-        st.warning("Please log in again to use the AI Coach.")
-        return
+        # Weather/flare toggle
+        weather = st.toggle("🌧️ Flare / Weather Mode",
+                            value=profile.get("weather_mode", False),
+                            help="Reduces session intensity on difficult days")
+        profile["weather_mode"] = weather
+        st.session_state.patient_profile = profile
 
-    rag = st.session_state.rag
-
-    # Floating Restart Button
-    st.markdown('<button class="restart-btn" onclick="window.location.reload()">🔄 Restart Chat</button>', unsafe_allow_html=True)
+        st.markdown(f"<p style='font-size:0.7rem;color:{MUTED};text-align:center;margin-top:1rem;'>⚠️ Not a medical device.<br>Consult your physician.</p>",
+                    unsafe_allow_html=True)
 
 
-    chat_container = st.container()
-    with chat_container:
-        for msg in st.session_state.messages:
-            bubble_class = "ai-bubble" if msg["role"] == "assistant" else "user-bubble"
-            st.markdown(f"<div class='chat-bubble {bubble_class}'>{msg['content']}</div>", unsafe_allow_html=True)
+# ── Router ────────────────────────────────────────────────────────────────────
+page = st.session_state.current_page
 
-    # Auto scroll
-    st.markdown("<script>window.scrollTo(0, document.body.scrollHeight);</script>", unsafe_allow_html=True)
+# Auth pages (no sidebar)
+if page == "splash":
+    from screens.auth import screen_splash
+    screen_splash()
 
-    user_input = st.chat_input("Type your message...")
-    if user_input:
-        st.session_state.messages.append({"role": "user", "content": user_input})
-        st.rerun()
+elif page == "welcome":
+    from screens.auth import screen_welcome
+    screen_welcome()
 
-    # After user reply
-    if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
-        user_message = st.session_state.messages[-1]["content"]
+elif page == "signup":
+    from screens.auth import screen_signup
+    screen_signup()
 
-        with st.spinner("Knee Rehab Assistant is thinking..."):
-            typing_placeholder = st.empty()
-            typing_placeholder.markdown("<div class='typing'>Assistant is typing...</div>", unsafe_allow_html=True)
-            time.sleep(1.2)
-            typing_placeholder.empty()
+elif page == "login":
+    from screens.auth import screen_login
+    screen_login()
 
-            ai_response, step = rag.conversational_intake(user_message)
+# Onboarding (no sidebar)
+elif page == "onboarding":
+    from screens.onboarding import screen_onboarding
+    screen_onboarding()
 
-            if step == "done":
-                profile = st.session_state.get("patient_profile", {})
-                context = rag.retrieve_context(user_message, profile)
-                ai_response = rag.generate_response(user_message, profile, context, st.session_state.messages)
+# Main app pages (with sidebar — naturally shown since initial_sidebar_state="expanded")
+elif page in ("home","therapy","progress","coach","profile"):
+    if not st.session_state.api_key:
+        go("welcome")
+    else:
+        _sidebar()
 
-        # Typing animation
-        bubble_placeholder = st.empty()
-        ai_text = ""
-        for char in ai_response:
-            ai_text += char
-            bubble_placeholder.markdown(f"<div class='chat-bubble ai-bubble'>{ai_text}</div>", unsafe_allow_html=True)
-            time.sleep(0.02)
-        st.session_state.messages.append({"role": "assistant", "content": ai_response})
-        st.rerun()
+        if page == "home":
+            from screens.home import screen_home
+            screen_home()
+        elif page == "therapy":
+            from screens.therapy import screen_therapy
+            screen_therapy()
+        elif page == "progress":
+            from screens.progress import screen_progress
+            screen_progress()
+        elif page == "coach":
+            from screens.coach import screen_coach
+            screen_coach()
+        elif page == "profile":
+            from screens.profile import screen_profile
+            screen_profile()
 
-def page_faq():
-    st.title("❓ FAQ")
-    faq = {
-        "Is this a medical app?": "No — this is an AI-assisted educational tool. Always consult your physician.",
-        "Do I need gym equipment?": "No, most exercises are bodyweight-based.",
-        "Is my data stored?": "No, your data stays local and private."
-    }
-    for q, a in faq.items():
-        with st.expander(q):
-            st.write(a)
-
-# === ROUTING ===
-if not st.session_state.api_key:
-    login_page()
 else:
-    sidebar_menu()
-    if st.session_state.page == "Home":
-        page_home()
-    elif st.session_state.page == "Features":
-        page_features()
-    elif st.session_state.page == "AI Coach":
-        page_coach()
-    elif st.session_state.page == "FAQ":
-        page_faq()
+    # Fallback
+    go("splash")
